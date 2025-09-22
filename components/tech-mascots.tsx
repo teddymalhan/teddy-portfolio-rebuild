@@ -75,7 +75,7 @@ export function TechMascots() {
         path: generateRandomPath(),
         duration: 300, // 5 minutes (300 seconds)
         delay: 0, // No delay, we'll use initial position instead
-        initialPosition: (i / 8) * 100, // Spread mascots evenly along their paths (0%, 12.5%, 25%, etc.)
+        initialPosition: Math.random() * 100, // Random starting position along each path (0-100%)
       })
     }
 
@@ -113,7 +113,7 @@ export function TechMascots() {
             className="opacity-80"
             initial={{ offsetDistance: `${mascot.initialPosition}%` }}
             animate={{ 
-              offsetDistance: mascot.initialPosition > 50 ? "0%" : "100%" 
+              offsetDistance: ["0%", "100%", "0%"] // Complete cycle animation
             }}
             transition={transition}
           >
