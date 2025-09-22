@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ChevronDown, ChevronRight } from "lucide-react"
+import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
+
+
 
 const experiences = [
   {
@@ -65,8 +68,21 @@ export function Experience() {
   return (
     <section id="experience" className="py-20 px-6">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-16 text-center">Experience</h2>
-
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-center">
+          my&nbsp;
+          <TextHighlighter 
+            highlightColor="hsl(30, 70%, 30%)"
+            triggerType="inView"
+            direction="ltr"
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+                experience
+          </TextHighlighter>
+          &nbsp;💼
+        </h2>
+        <h3 className="text-xl md:text-2xl font-light text-foreground mb-8 text-center">
+          here's some stuff i've done so far!
+        </h3>
         <div className="relative">
           {/* Timeline line */}
           <div className="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-primary/30"></div>
