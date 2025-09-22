@@ -14,7 +14,7 @@ const experiences = [
     role: "Software Engineer Intern",
     period: "May 2025 – Aug 2025",
     location: "Vancouver, BC",
-    logoUrl: "https://seeklogo.com/images/E/electronic-arts-logo-F8C2B4C6E8-seeklogo.com.png",
+    logoUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5EbAYJ4fnvZp8PBJa0gDeO7uEvmlAJjurig&s",
     achievements: [
       "Engineered a ReAct AI agent leveraging Python FastAPI (LangGraph), React, and Go to streamline game configuration workflows, efficiently handling over 1.2 million linked records for FC 26 and saving more than 100 hours monthly",
       "Achieved a 100× improvement in query speed (18.2s to 157 ms for 120k records) by implementing database sharding and TTL based caching with Redis (AWS ElastiCache) for a Golang MCP Server querying GraphQL endpoints",
@@ -27,7 +27,7 @@ const experiences = [
     role: "Software Engineer Intern",
     period: "Jan 2025 – Apr 2025",
     location: "Vancouver, BC",
-    logoUrl: "https://seeklogo.com/images/D/dialpad-logo-7B9E8B7B8B-seeklogo.com.png",
+    logoUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzji6wOPSF5w3pA8ATOaizQN2w-wFIs8FhKA&s",
     achievements: [
       "Delivered the Digital Scorecards for 70k+ end users and 200K RPS peak, by building WCAG compliant components using Vue.js (TypeScript), collaborating with senior engineers and QA using Jira and Git",
       "Shipped 7+ compliance-driven feature flags in Django (Python) to customize Dialpad AI for Randstad, contributing to a drop of operational overhead by 10% for 600K+ clients",
@@ -40,7 +40,7 @@ const experiences = [
     role: "Software Engineer (Remote)",
     period: "Sept 2024 – Dec 2024",
     location: "California, United States",
-    logoUrl: "/nonprofit-heart-icon-blue.jpg",
+    logoUrl: "https://media.licdn.com/dms/image/v2/C560BAQHKP2Tu00J6Cw/company-logo_200_200/company-logo_200_200/0/1678590187185/develop_for_good_logo?e=1761177600&v=beta&t=oVj3GaeMG_ito89M7-emXgyYYovqISWmhsvyNYp5QBk",
     achievements: [
       "Contributed to redesigning a full-stack website for Forgotten Felines of Sonoma County using TypeScript, React, Next.js, Tailwind CSS, and Figma, reducing load times from 3 seconds to 1 second to improve SEO",
       "Integrated with Supabase (PostgreSQL) SQL database for real-time updates and deployed on Vercel, with secure JWT based authentication, and shipped 10+ production ready features in Agile sprints",
@@ -86,7 +86,7 @@ export function Experience() {
                         <CardHeader className="cursor-pointer hover:bg-card/30 transition-colors">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                              <Avatar className="w-12 h-12 border-2 border-border">
+                              <Avatar className="rounded-lg w-12 h-12 border-2 border-border">
                                 <AvatarImage
                                   src={exp.logoUrl || "/placeholder.svg"}
                                   alt={`${exp.company} logo`}

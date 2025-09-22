@@ -12,29 +12,24 @@ export function About() {
         <div className="absolute bottom-10 left-10 w-24 h-24 bg-accent/5 rounded-full blur-2xl"></div>
 
         <div className="relative z-10 p-8 md:p-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-16 text-center">About Me</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-16 text-center"> 👨‍💻 About Me</h2>
 
           <div className="grid lg:grid-cols-3 gap-8 md:gap-12">
             {/* Main content */}
             <div className="lg:col-span-2 space-y-6">
-              <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50 bg-opacity-50  bg-white rounded-xl border-2 border-gray-300 shadow-lg p-8 md:p-12">
                 <CardContent className="p-6 md:p-8">
-                  <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
+                  <div className="space-y-6 text-lg text-foreground leading-relaxed">
                     <p>
-                      I'm a Computer Science student at Simon Fraser University with a passion for building scalable,
-                      high-performance software systems. My experience spans from optimizing database queries to
-                      deploying microservices at scale.
+                      I'm a Computer Science student at Simon Fraser University 🎓 with a passion for building scalable, high-performance software systems 🚀. My experience spans from optimizing database queries 🗃️ to deploying microservices at scale ⚡.
                     </p>
 
                     <p>
-                      During my internships at Electronic Arts and Dialpad, I've worked on systems handling millions of
-                      records and hundreds of thousands of requests per second, always focusing on performance,
-                      reliability, and user experience.
+                      During my internships at Electronic Arts 🎮 and Dialpad ☎️, I've worked on systems handling millions of records and hundreds of thousands of requests per second 📊, always focusing on performance, reliability, and user experience 💯.
                     </p>
 
                     <p>
-                      When I'm not coding, you can find me exploring new technologies, contributing to open source
-                      projects, or working on personal projects that solve real-world problems.
+                      When I'm not coding 💻, you can find me exploring new technologies 🔍, contributing to open source projects 🌟, or working on personal projects that solve real-world problems 🛠️.
                     </p>
                   </div>
                 </CardContent>
@@ -43,35 +38,6 @@ export function About() {
 
             {/* Sidebar content */}
             <div className="space-y-6">
-              <Card className="bg-card/30 backdrop-blur-sm border-border/50">
-                <CardHeader>
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <div className="w-2 h-2 bg-accent rounded-full"></div>
-                    Current Focus
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-accent/60 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">Full-stack development with modern frameworks</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-accent/60 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">Microservices architecture and scalability</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-accent/60 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">AI/ML integration in software systems</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-accent/60 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">Cloud infrastructure and DevOps practices</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               <Card className="bg-card/30 backdrop-blur-sm border-border/50">
                 <CardHeader>
                   <CardTitle className="text-xl flex items-center gap-2">

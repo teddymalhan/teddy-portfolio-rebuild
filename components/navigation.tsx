@@ -1,36 +1,42 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
+import { Menu, X } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 const navItems = [
-  { name: "About", href: "#about" },
-  { name: "Experience", href: "#experience" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "💼 my work exp", href: "#experience", emoji: "" },
+  { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
 
 export function Navigation() {
   const [activeSection, setActiveSection] = useState("")
+  const [isAtHero, setIsAtHero] = useState(true)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollPosition = window.scrollY
       const sections = navItems.map((item) => item.href.slice(1))
-      const scrollPosition = window.scrollY + 100
+      
+      // Check if we're at the hero section (top of the page)
+      if (scrollPosition < 100) {
+        setIsAtHero(true)
+        setActiveSection("")
+        return
+      } else {
+        setIsAtHero(false)
+      }
 
-      for (const section of sections) {
+      // Check which section we're currently in
+      for (const item of navItems) {
+        const section = item.href.slice(1)
         const element = document.getElementById(section)
         if (element) {
           const { offsetTop, offsetHeight } = element
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+          if (scrollPosition + 100 >= offsetTop && scrollPosition + 100 < offsetTop + offsetHeight) {
             setActiveSection(section)
             break
           }
@@ -39,6 +45,7 @@ export function Navigation() {
     }
 
     window.addEventListener("scroll", handleScroll)
+    handleScroll() // Check initial position
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -47,65 +54,90 @@ export function Navigation() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
+    setIsMobileMenuOpen(false) // Close mobile menu after navigation
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="text-xl font-bold text-foreground">Teddy Malhan</div>
+    <>
+      {/* Desktop Navigation */}
+      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl">🧸</div>
 
-          {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList className="space-x-2">
+            <div className="flex space-x-1">
               {navItems.map((item) => (
-                <NavigationMenuItem key={item.name}>
-                  <NavigationMenuLink asChild>
-                    <button
-                      onClick={() => scrollToSection(item.href)}
-                      className={`px-4 py-2 text-sm transition-colors hover:text-primary rounded-md ${
-                        activeSection === item.href.slice(1) ? "text-primary bg-accent/10" : "text-muted-foreground"
-                      }`}
-                    >
-                      {item.name}
-                    </button>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+                <motion.button
+                  key={item.name}
+                  onClick={() => scrollToSection(item.href)}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+                    !isAtHero && activeSection === item.href.slice(1) 
+                      ? "text-primary bg-primary/10" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {item.name}
+                </motion.button>
               ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+            </div>
 
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" onClick={() => window.open("/resume.pdf", "_blank")}>
-              Resume
-            </Button>
-
-            {/* Mobile Navigation */}
-            <Sheet>
-              <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="sm">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col space-y-4 mt-8">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.name}
-                      onClick={() => scrollToSection(item.href)}
-                      className={`text-left px-4 py-2 text-sm transition-colors hover:text-primary rounded-md ${
-                        activeSection === item.href.slice(1) ? "text-primary bg-accent/10" : "text-muted-foreground"
-                      }`}
-                    >
-                      {item.name}
-                    </button>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
+            <div>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile Navigation */}
+      <nav className="md:hidden fixed top-4 left-4 right-4 z-50">
+        <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl">🧸</div>
+            
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 rounded-full text-foreground hover:text-primary hover:bg-accent/20 transition-all duration-200"
+              >
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed inset-0 z-40 bg-gradient-to-br from-background/95 via-background/90 to-card/95 backdrop-blur-xl"
+            style={{ paddingTop: '100px' }} // Account for pill nav bar height
+          >
+            <div className="flex flex-col items-center justify-center h-full space-y-6 px-8">
+              {navItems.map((item, index) => (
+                <motion.button
+                  key={item.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.1 }}
+                  onClick={() => scrollToSection(item.href)}
+                  className="flex items-center gap-4 text-xl font-medium text-foreground hover:text-primary transition-colors py-4 px-6 rounded-2xl hover:bg-accent/10 w-full max-w-xs justify-center"
+                >
+                  <span className="text-2xl">{item.emoji}</span>
+                  <span>{item.name}</span>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
