@@ -126,20 +126,12 @@ export function Hero() {
         <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
           <AlgoliaButton 
             onClick={() => window.open("/Teddy_Malhan_Resume (1).pdf", "_blank")}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 flex items-center gap-2 h-11 px-8"
+            className="bg-teal-600 hover:bg-amber-500 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 flex items-center gap-2 h-11 px-8 rounded-xl "
           >
-            <Download className="w-4 h-4" />
-            <span>resume</span>
-            <ArrowRight className="w-4 h-4" />
+            {/* <Download className="w-4 h-4" /> */}
+            <span>view resume!</span>
+            {/* <ArrowRight className="w-4 h-4" /> */}
           </AlgoliaButton>
-          <Button 
-            className="bg-purple-500 hover:bg-purple-600 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0" 
-            size="lg" 
-            onClick={() => window.open("mailto:ama367@sfu.ca")}
-          >
-            <Mail className="w-4 h-4 mr-2" />
-            email me! 
-          </Button>
         </div>
 
         <div className="flex items-center justify-center space-x-4">

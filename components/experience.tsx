@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ChevronDown, ChevronRight } from "lucide-react"
 
@@ -81,99 +81,169 @@ export function Experience() {
                   <div className="absolute left-2 md:left-6 w-4 h-4 bg-primary rounded-full border-4 border-background"></div>
 
                   <Card className="bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/70 transition-all duration-300">
-                    <Collapsible open={isExpanded} onOpenChange={() => toggleExpanded(index)}>
-                      <CollapsibleTrigger asChild>
-                        <CardHeader className="cursor-pointer hover:bg-card/30 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <Avatar className="rounded-lg w-12 h-12 border-2 border-border">
-                                <AvatarImage
-                                  src={exp.logoUrl || "/placeholder.svg"}
-                                  alt={`${exp.company} logo`}
-                                  className="object-contain p-1"
-                                />
-                                <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                                  {exp.company.slice(0, 2).toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <h3 className="text-xl font-bold text-foreground mb-1">{exp.role}</h3>
-                                <p className="text-primary font-semibold text-lg">{exp.company}</p>
-                                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mt-2">
-                                  <p className="text-muted-foreground font-medium">{exp.period}</p>
-                                  <span className="hidden md:block text-muted-foreground">•</span>
-                                  <p className="text-muted-foreground">{exp.location}</p>
-                                </div>
+                    <motion.header
+                      initial={false}
+                      animate={{ 
+                        backgroundColor: isExpanded ? "rgba(var(--primary), 0.1)" : "transparent" 
+                      }}
+                      transition={{ duration: 0.15 }}
+                      onClick={() => toggleExpanded(index)}
+                    >
+                      <CardHeader className="cursor-pointer hover:bg-card/30 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <Avatar className="rounded-lg w-12 h-12 border-2 border-border">
+                              <AvatarImage
+                                src={exp.logoUrl || "/placeholder.svg"}
+                                alt={`${exp.company} logo`}
+                                className="object-contain p-1"
+                              />
+                              <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                                {exp.company.slice(0, 2).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <h3 className="text-xl font-bold text-foreground mb-1">{exp.role}</h3>
+                              <p className="text-primary font-semibold text-lg">{exp.company}</p>
+                              <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mt-2">
+                                <p className="text-muted-foreground font-medium">{exp.period}</p>
+                                <span className="hidden md:block text-muted-foreground">•</span>
+                                <p className="text-muted-foreground">{exp.location}</p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                              <div className="hidden md:flex flex-wrap gap-1 max-w-xs">
-                                {exp.technologies.slice(0, 4).map((tech) => (
-                                  <Badge
-                                    key={tech}
-                                    variant="outline"
-                                    className="text-xs border-primary/30 text-primary hover:bg-primary/10"
-                                  >
-                                    {tech}
-                                  </Badge>
-                                ))}
-                                {exp.technologies.length > 4 && (
-                                  <Badge variant="outline" className="text-xs border-primary/30 text-primary">
-                                    +{exp.technologies.length - 4}
-                                  </Badge>
-                                )}
-                              </div>
-                              <Button variant="ghost" size="sm">
-                                {isExpanded ? (
-                                  <ChevronDown className="w-5 h-5 text-muted-foreground transition-transform" />
-                                ) : (
-                                  <ChevronRight className="w-5 h-5 text-muted-foreground transition-transform" />
-                                )}
-                              </Button>
-                            </div>
                           </div>
-
-                          <div className="md:hidden mt-4 flex flex-wrap gap-2">
-                            {exp.technologies.map((tech) => (
-                              <Badge
-                                key={tech}
-                                variant="outline"
-                                className="text-xs border-primary/30 text-primary hover:bg-primary/10"
-                              >
-                                {tech}
-                              </Badge>
-                            ))}
-                          </div>
-                        </CardHeader>
-                      </CollapsibleTrigger>
-
-                      <CollapsibleContent>
-                        <CardContent className="pt-0">
-                          <div className="border-t border-border/20 pt-6">
-                            <ul className="space-y-3">
-                              {exp.achievements.map((achievement, i) => (
-                                <li key={i} className="text-muted-foreground leading-relaxed flex items-start gap-3">
-                                  <span className="text-primary mt-2 text-xs">▶</span>
-                                  <span>{achievement}</span>
-                                </li>
-                              ))}
-                            </ul>
-
-                            <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t border-border/10">
-                              {exp.technologies.map((tech) => (
+                          <div className="flex items-center gap-4">
+                            <div className="hidden md:flex flex-wrap gap-1 max-w-xs">
+                              {exp.technologies.slice(0, 4).map((tech) => (
                                 <Badge
                                   key={tech}
-                                  variant="secondary"
-                                  className="text-xs bg-primary/10 text-primary hover:bg-primary/20"
+                                  variant="outline"
+                                  className="text-xs border-primary/30 text-primary hover:bg-primary/10"
                                 >
                                   {tech}
                                 </Badge>
                               ))}
+                              {exp.technologies.length > 4 && (
+                                <Badge variant="outline" className="text-xs border-primary/30 text-primary">
+                                  +{exp.technologies.length - 4}
+                                </Badge>
+                              )}
                             </div>
+                            <Button variant="ghost" size="sm">
+                              <motion.div
+                                animate={{ rotate: isExpanded ? 90 : 0 }}
+                                transition={{ duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }}
+                              >
+                                {isExpanded ? (
+                                  <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                                ) : (
+                                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                                )}
+                              </motion.div>
+                            </Button>
                           </div>
-                        </CardContent>
-                      </CollapsibleContent>
-                    </Collapsible>
+                        </div>
+
+                        <div className="md:hidden mt-4 flex flex-wrap gap-2">
+                          {exp.technologies.map((tech) => (
+                            <Badge
+                              key={tech}
+                              variant="outline"
+                              className="text-xs border-primary/30 text-primary hover:bg-primary/10"
+                            >
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardHeader>
+                    </motion.header>
+
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.section
+                          key="content"
+                          initial="collapsed"
+                          animate="open"
+                          exit="collapsed"
+                          variants={{
+                            open: { 
+                              opacity: 1, 
+                              height: "auto",
+                              transition: { 
+                                duration: 0.3, 
+                                ease: [0.04, 0.62, 0.23, 0.98],
+                                opacity: { duration: 0.15 }
+                              }
+                            },
+                            collapsed: { 
+                              opacity: 0, 
+                              height: 0,
+                              transition: { 
+                                duration: 0.25, 
+                                ease: [0.04, 0.62, 0.23, 0.98],
+                                opacity: { duration: 0.1 }
+                              }
+                            }
+                          }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <CardContent className="pt-0">
+                            <div className="border-t border-border/20 pt-6">
+                              <motion.ul 
+                                className="space-y-3"
+                                initial={{ y: -10 }}
+                                animate={{ y: 0 }}
+                                transition={{ delay: 0.05, duration: 0.2 }}
+                              >
+                                {exp.achievements.map((achievement, i) => (
+                                  <motion.li 
+                                    key={i} 
+                                    className="text-muted-foreground leading-relaxed flex items-start gap-3"
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ 
+                                      delay: 0.08 + (i * 0.03),
+                                      duration: 0.2,
+                                      ease: [0.04, 0.62, 0.23, 0.98]
+                                    }}
+                                  >
+                                    <span className="text-primary mt-2 text-xs">▶</span>
+                                    <span>{achievement}</span>
+                                  </motion.li>
+                                ))}
+                              </motion.ul>
+
+                              <motion.div 
+                                className="flex flex-wrap gap-2 mt-6 pt-4 border-t border-border/10"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.15, duration: 0.2 }}
+                              >
+                                {exp.technologies.map((tech, i) => (
+                                  <motion.div
+                                    key={tech}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ 
+                                      delay: 0.18 + (i * 0.02),
+                                      duration: 0.15,
+                                      ease: [0.04, 0.62, 0.23, 0.98]
+                                    }}
+                                  >
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-xs bg-primary/10 text-primary hover:bg-primary/20"
+                                    >
+                                      {tech}
+                                    </Badge>
+                                  </motion.div>
+                                ))}
+                              </motion.div>
+                            </div>
+                          </CardContent>
+                        </motion.section>
+                      )}
+                    </AnimatePresence>
                   </Card>
                 </div>
               )
