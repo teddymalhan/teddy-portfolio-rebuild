@@ -127,7 +127,7 @@ export function Hero() {
 
         <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
           <AlgoliaButton 
-            onClick={() => window.open("/Teddy_Malhan_Resume (1).pdf", "_blank")}
+            onClick={() => window.open("/Teddy_Malhan_Resume.pdf", "_blank")}
             className="bg-teal-600 hover:bg-amber-500 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 flex items-center gap-2 h-11 px-8 rounded-xl "
           >
             {/* <Download className="w-4 h-4" /> */}
