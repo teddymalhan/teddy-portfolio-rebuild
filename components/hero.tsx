@@ -50,7 +50,7 @@ export function Hero() {
         <div className="mb-8">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 text-balance">
             <span className="relative inline-block pb-6">
-              hi! i'm teddy!
+              hi! i'm teddy! 👋
               <svg 
                 className="absolute bottom-0 left-0 w-full h-8 overflow-visible" 
                 viewBox="0 0 438.6328125 70.77084350585938"

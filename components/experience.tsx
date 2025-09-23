@@ -10,7 +10,7 @@ export function Experience() {
         {/* Left Content */}
         <div className="space-y-8">
           <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-balance">
-            i'm teddy. i live in <TextHighlighter highlightColor="var(--highlight-color)" className="[--highlight-color:hsl(30,90%,70%)] dark:[--highlight-color:hsl(30,90%,30%)]">vancouver 🏖️</TextHighlighter>, where i create software for the web and beyond.
+            i'm teddy 🧸. i live in <TextHighlighter highlightColor="var(--highlight-color)" className="[--highlight-color:hsl(30,90%,70%)] dark:[--highlight-color:hsl(30,90%,30%)]">vancouver 🏖️</TextHighlighter>, where i create software for the web 🌐 and beyond.
           </h1>
 
           <div className="space-y-6 text-muted-foreground leading-relaxed">
