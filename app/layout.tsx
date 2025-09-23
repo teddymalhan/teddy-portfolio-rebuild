@@ -5,6 +5,8 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import CustomCursor from "@/components/custom-cursor"
+import LenisProvider from "@/components/lenis-provider"
+import "lenis/dist/lenis.css"
 import "./globals.css"
 
 const nunito = Nunito({
@@ -34,16 +36,18 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+          enableSystem={true}
+          disableTransitionOnChange={true}
         >
-          <div>
-            <CustomCursor />
-            <Suspense fallback={null}>
-              {children}
-            </Suspense>
-            <Analytics />
-          </div>
+          <LenisProvider>
+            <div>
+              <CustomCursor />
+              <Suspense fallback={null}>
+                {children}
+              </Suspense>
+              <Analytics />
+            </div>
+          </LenisProvider>
         </ThemeProvider>
       </body>
     </html>

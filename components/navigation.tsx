@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useLenisScroll } from "@/lib/use-lenis"
 
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
@@ -16,6 +17,7 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState("")
   const [isAtHero, setIsAtHero] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { scrollToSection: lenisScrollToSection } = useLenisScroll()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,15 +64,11 @@ export function Navigation() {
 
   const scrollToSection = (href: string) => {
     const sectionId = href.slice(1)
-    const element = document.getElementById(sectionId)
-    if (element) {
-      const navHeight = 80 // Account for fixed navigation height
-      const elementPosition = element.offsetTop - navHeight
-      window.scrollTo({
-        top: elementPosition,
-        behavior: "smooth"
-      })
-    }
+    const navHeight = 80 // Account for fixed navigation height
+    
+    // Use Lenis for smooth scrolling
+    lenisScrollToSection(sectionId, navHeight)
+    
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
   }
 
