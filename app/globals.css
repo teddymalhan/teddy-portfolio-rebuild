@@ -139,7 +139,12 @@
   
   * {
     @apply border-border outline-ring/50;
-    cursor: none;
+  }
+
+  @media (min-width: 768px) {
+    * {
+      cursor: none;
+    }
   }
   
   body {
