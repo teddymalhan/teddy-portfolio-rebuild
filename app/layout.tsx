@@ -4,6 +4,7 @@ import { Nunito } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
+import CustomCursor from "@/components/custom-cursor"
 import "./globals.css"
 
 const nunito = Nunito({
@@ -33,10 +34,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Suspense fallback={null}>
-            {children}
-          </Suspense>
-          <Analytics />
+          <>
+            <CustomCursor />
+            <Suspense fallback={null}>
+              {children}
+            </Suspense>
+            <Analytics />
+          </>
         </ThemeProvider>
       </body>
     </html>
