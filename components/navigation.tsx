@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useLenisScroll } from "@/lib/use-lenis"
+import Realistic from "react-canvas-confetti/dist/presets/realistic"
 
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
@@ -17,7 +18,9 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState("")
   const [isAtHero, setIsAtHero] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
   const { scrollToSection: lenisScrollToSection } = useLenisScroll()
+  const conductorRef = useRef<any>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,13 +75,26 @@ export function Navigation() {
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
   }
 
+  const triggerConfetti = () => {
+    if (conductorRef.current) {
+      conductorRef.current.run({ speed: 0.3, duration: 2000 })
+    }
+  }
+
   return (
     <>
       {/* Desktop Navigation */}
       <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-2xl">🧸</div>
+            <motion.button
+              onClick={triggerConfetti}
+              className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              🧸
+            </motion.button>
 
             <div className="flex space-x-1">
               {navItems.map((item) => (
@@ -109,7 +125,14 @@ export function Navigation() {
       <nav className="md:hidden fixed top-4 left-4 right-4 z-50">
         <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="text-2xl">🧸</div>
+            <motion.button
+              onClick={triggerConfetti}
+              className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              🧸
+            </motion.button>
             
             <div className="flex items-center gap-2">
               <ThemeToggle />
@@ -153,6 +176,14 @@ export function Navigation() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Confetti */}
+      <Realistic 
+        onInit={({ conductor }) => {
+          conductorRef.current = conductor
+        }}
+        className="fixed inset-0 pointer-events-none z-[9999]"
+      />
     </>
   )
 }
