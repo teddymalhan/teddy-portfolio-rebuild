@@ -94,7 +94,7 @@ export function Hero() {
               <img 
                 src="https://praxis.encommun.io/media/notes/note_12478/sfu.jpg" 
                 alt="SFU logo" 
-                className="w-5 h-5 rounded"
+                className="w-5 h-5 rounded-full"
               />
               <TextHighlighter highlightColor="rgb(212, 40, 55)" className="text-white px-2 py-1 rounded font-bold">simon fraser university</TextHighlighter>
             </span>
@@ -106,7 +106,7 @@ export function Hero() {
               <img 
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5EbAYJ4fnvZp8PBJa0gDeO7uEvmlAJjurig&s" 
                 alt="EA logo" 
-                className="w-5 h-5 rounded"
+                className="w-5 h-5 rounded-full"
               />
               <TextHighlighter highlightColor="rgb(37, 99, 235)" className="text-white px-2 py-1 rounded font-bold">electronic arts</TextHighlighter>
             </span>{" "}

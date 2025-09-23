@@ -133,7 +133,7 @@ export function Experience() {
 
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded overflow-hidden flex items-center justify-center flex-shrink-0">
                      <img 
                       src="https://media.licdn.com/dms/image/v2/C560BAQHKP2Tu00J6Cw/company-logo_200_200/company-logo_200_200/0/1678590187185/develop_for_good_logo?e=2147483647&v=beta&t=acs0ifffs2qrncn6j1ldjNP5QeNalM6WGXf69IpGVUg" 
                       alt="Develop for Good logo" 
