@@ -5,15 +5,15 @@ import { TextHighlighter } from "./fancy/text/text-highlighter"
 
 export function Experience() {
   return (
-    <div className="min-h-screen text-white p-8 lg:p-16">
+    <div id="experience" className="min-h-screen text-foreground p-8 lg:p-16">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-start">
         {/* Left Content */}
         <div className="space-y-8">
           <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-balance">
-            i'm teddy. i live in <TextHighlighter highlightColor="hsl(30, 90%, 30%)">vancouver 🏖️</TextHighlighter>, where i create software for the web and beyond.
+            i'm teddy. i live in <TextHighlighter highlightColor="var(--highlight-color)" className="[--highlight-color:hsl(30,90%,70%)] dark:[--highlight-color:hsl(30,90%,30%)]">vancouver 🏖️</TextHighlighter>, where i create software for the web and beyond.
           </h1>
 
-          <div className="space-y-6 text-gray-300 leading-relaxed">
+          <div className="space-y-6 text-muted-foreground leading-relaxed">
             <p>
               as a third-year computer science student at simon fraser university, i've been passionate about 
               technology and programming since high school. what started as curiosity about how software works 
@@ -30,7 +30,7 @@ export function Experience() {
               in my free time, i build web-based projects and contribute to open source. i love the intersection 
               of problem-solving and creativity that comes with software development. if you want to build 
               something together or just want to connect, feel free to{" "}
-              <a href="#contact" className="text-cyan-400 hover:text-cyan-300 transition-colors">
+              <a href="#contact" className="text-primary hover:text-primary/80 transition-colors">
                 reach out
               </a>
               .
@@ -42,10 +42,10 @@ export function Experience() {
         <div className="space-y-8">
           {/* Profile Image Placeholder */}
           {/* Work & Education Section */}
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+          <div className="bg-card/50 rounded-2xl p-6 border border-border">
             <div className="flex items-center gap-3 mb-6">
-              <Briefcase className="w-5 h-5 text-gray-400" />
-              <h2 className="text-lg font-medium text-gray-200">work & education</h2>
+              <Briefcase className="w-5 h-5 text-muted-foreground" />
+              <h2 className="text-lg font-medium text-foreground">work & education</h2>
             </div>
 
             <div className="space-y-6">
@@ -60,11 +60,11 @@ export function Experience() {
                     />
                   </div>
                   <div>
-                    <div className="font-medium text-white">electronic arts</div>
-                    <div className="text-sm text-gray-400">software engineer intern</div>
+                    <div className="font-medium text-foreground">electronic arts</div>
+                    <div className="text-sm text-muted-foreground">software engineer intern</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">may 2025 — aug 2025</div>
+                <div className="text-sm text-muted-foreground/70">may 2025 — aug 2025</div>
               </div>
 
               {/* Dialpad */}
@@ -78,11 +78,11 @@ export function Experience() {
                     />
                   </div>
                   <div>
-                    <div className="font-medium text-white">dialpad</div>
-                    <div className="text-sm text-gray-400">software engineer intern</div>
+                    <div className="font-medium text-foreground">dialpad</div>
+                    <div className="text-sm text-muted-foreground">software engineer intern</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">jan 2025 — apr 2025</div>
+                <div className="text-sm text-muted-foreground/70">jan 2025 — apr 2025</div>
               </div>
 
               {/* SFU */}
@@ -96,20 +96,20 @@ export function Experience() {
                     />
                   </div>
                   <div>
-                    <div className="font-medium text-white">simon fraser university</div>
-                    <div className="text-sm text-gray-400">studying computer science</div>
+                    <div className="font-medium text-foreground">simon fraser university</div>
+                    <div className="text-sm text-muted-foreground">studying computer science</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">expected 2027</div>
+                <div className="text-sm text-muted-foreground/70">expected 2027</div>
               </div>
             </div>
           </div>
 
           {/* Volunteering Section */}
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+          <div className="bg-card/50 rounded-2xl p-6 border border-border">
             <div className="flex items-center gap-3 mb-6">
-              <Heart className="w-5 h-5 text-gray-400" />
-              <h2 className="text-lg font-medium text-gray-200">volunteering</h2>
+              <Heart className="w-5 h-5 text-muted-foreground" />
+              <h2 className="text-lg font-medium text-foreground">volunteering</h2>
             </div>
 
             <div className="space-y-6">
@@ -124,11 +124,11 @@ export function Experience() {
                     />
                   </div>
                   <div>
-                    <div className="font-medium text-white">sfu blueprint - reel youth</div>
-                    <div className="text-sm text-gray-400">software developer</div>
+                    <div className="font-medium text-foreground">sfu blueprint - reel youth</div>
+                    <div className="text-sm text-muted-foreground">software developer</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">sept 2024 — april 2025</div>
+                <div className="text-sm text-muted-foreground/70">sept 2024 — april 2025</div>
               </div>
 
               <div className="flex items-center justify-between">
@@ -141,11 +141,11 @@ export function Experience() {
                     />
                   </div>
                   <div>
-                    <div className="font-medium text-white">develop for good</div>
-                    <div className="text-sm text-gray-400">software developer</div>
+                    <div className="font-medium text-foreground">develop for good</div>
+                    <div className="text-sm text-muted-foreground">software developer</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">sept 2024 — feb 2025</div>
+                <div className="text-sm text-muted-foreground/70">sept 2024 — feb 2025</div>
               </div>
 
               {/* CS Peer Tutor */}
@@ -159,11 +159,11 @@ export function Experience() {
                     />
                   </div>
                   <div>
-                    <div className="font-medium text-white">cs peer tutor</div>
-                    <div className="text-sm text-gray-400">tutor at sfu</div>
+                    <div className="font-medium text-foreground">cs peer tutor</div>
+                    <div className="text-sm text-muted-foreground">tutor at sfu</div>
                   </div>
                 </div>
-                <div className="text-sm text-gray-500">2024</div>
+                <div className="text-sm text-muted-foreground/70">2024</div>
               </div>
             </div>
           </div>

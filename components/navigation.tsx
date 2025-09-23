@@ -7,8 +7,9 @@ import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const navItems = [
-  { name: "💼 my experience", href: "#experience", emoji: "" },
-  { name: "📬 get in touch!", href: "#contact", emoji: "" },
+  { name: "🏠 home", href: "#home", emoji: "🏠" },
+  { name: "💼 my experience", href: "#experience", emoji: "💼" },
+  { name: "📬 get in touch!", href: "#contact", emoji: "📬" },
 ]
 
 export function Navigation() {
@@ -19,28 +20,38 @@ export function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
-      const sections = navItems.map((item) => item.href.slice(1))
+      const windowHeight = window.innerHeight
       
       // Check if we're at the hero section (top of the page)
-      if (scrollPosition < 100) {
+      if (scrollPosition < windowHeight / 2) {
         setIsAtHero(true)
-        setActiveSection("")
+        setActiveSection("home")
         return
       } else {
         setIsAtHero(false)
       }
 
       // Check which section we're currently in
+      let currentSection = ""
       for (const item of navItems) {
-        const section = item.href.slice(1)
-        const element = document.getElementById(section)
+        const sectionId = item.href.slice(1)
+        const element = document.getElementById(sectionId)
         if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (scrollPosition + 100 >= offsetTop && scrollPosition + 100 < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
+          const rect = element.getBoundingClientRect()
+          const elementTop = rect.top + scrollPosition
+          const elementHeight = rect.height
+          const navOffset = 100 // Offset for navigation bar
+          
+          // Check if the section is currently in the viewport
+          if (scrollPosition + navOffset >= elementTop && 
+              scrollPosition + navOffset < elementTop + elementHeight) {
+            currentSection = sectionId
           }
         }
+      }
+      
+      if (currentSection) {
+        setActiveSection(currentSection)
       }
     }
 
@@ -50,9 +61,15 @@ export function Navigation() {
   }, [])
 
   const scrollToSection = (href: string) => {
-    const element = document.getElementById(href.slice(1))
+    const sectionId = href.slice(1)
+    const element = document.getElementById(sectionId)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      const navHeight = 80 // Account for fixed navigation height
+      const elementPosition = element.offsetTop - navHeight
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth"
+      })
     }
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
   }
@@ -71,7 +88,7 @@ export function Navigation() {
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
                   className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                    !isAtHero && activeSection === item.href.slice(1) 
+                    activeSection === item.href.slice(1) 
                       ? "text-primary bg-primary/10" 
                       : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   }`}
