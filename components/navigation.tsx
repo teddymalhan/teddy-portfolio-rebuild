@@ -7,9 +7,9 @@ import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const navItems = [
-  { name: "🏠 home", href: "#home", emoji: "🏠" },
-  { name: "💼 my experience", href: "#experience", emoji: "💼" },
-  { name: "📬 get in touch!", href: "#contact", emoji: "📬" },
+  { name: "🏠 home", href: "#home", emoji: "" },
+  { name: "💼 my experience", href: "#experience", emoji: "" },
+  { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
 
 export function Navigation() {
