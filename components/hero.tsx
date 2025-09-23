@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import AlgoliaButton from "@/components/ui/algolia-button"
 import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
-import { Github, Linkedin, Mail, Phone, Download, ArrowRight } from "lucide-react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faPhone, faDownload, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
 export function Hero() {
   return (
@@ -141,7 +143,7 @@ export function Hero() {
             onClick={() => window.open("https://linkedin.com/in/teddymalhan", "_blank")}
             className="hover:text-primary"
           >
-            <Linkedin className="w-5 h-5" />
+            <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5" />
           </Button>
           <Button
             variant="ghost"
@@ -149,7 +151,7 @@ export function Hero() {
             onClick={() => window.open("https://github.com/teddymalhan", "_blank")}
             className="hover:text-primary"
           >
-            <Github className="w-5 h-5" />
+            <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
           </Button>
         </div>
       </div>

@@ -1,12 +1,13 @@
 "use client"
 
-import { Briefcase, Heart } from "lucide-react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBriefcase, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { TextHighlighter } from "./fancy/text/text-highlighter"
 
 export function Experience() {
   return (
-    <div id="experience" className="min-h-screen text-foreground p-8 lg:p-16">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-start">
+    <div id="experience" className="min-h-screen text-foreground px-4 sm:px-8 lg:px-16 py-8 lg:py-16">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-start md:bg-card/20 md:hover:bg-card/80 md:rounded-3xl md:p-8 lg:p-12 md:border md:border-border md:shadow-lg md:transition-colors md:duration-300">
         {/* Left Content */}
         <div className="space-y-8">
           <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-balance">
@@ -44,7 +45,7 @@ export function Experience() {
           {/* Work & Education Section */}
           <div className="bg-card/50 rounded-2xl p-4 sm:p-6 border border-border">
             <div className="flex items-center gap-3 mb-4 sm:mb-6">
-              <Briefcase className="w-5 h-5 text-muted-foreground" />
+              <FontAwesomeIcon icon={faBriefcase} className="w-5 h-5 text-muted-foreground" />
               <h2 className="text-lg font-medium text-foreground">work & education</h2>
             </div>
 
@@ -108,7 +109,7 @@ export function Experience() {
           {/* Volunteering Section */}
           <div className="bg-card/50 rounded-2xl p-4 sm:p-6 border border-border">
             <div className="flex items-center gap-3 mb-4 sm:mb-6">
-              <Heart className="w-5 h-5 text-muted-foreground" />
+              <FontAwesomeIcon icon={faHeart} className="w-5 h-5 text-muted-foreground" />
               <h2 className="text-lg font-medium text-foreground">volunteering</h2>
             </div>
 

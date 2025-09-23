@@ -1,4 +1,6 @@
-import { Github, Linkedin, Mail, Sparkles } from "lucide-react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faStar } from '@fortawesome/free-solid-svg-icons'
+import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { cn } from "@/lib/utils"
 
 function BentoCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -15,7 +17,7 @@ function ContactCard() {
       <div className="text-center">
         <div className="flex justify-center mb-4">
           <div className="p-4 bg-primary/20 rounded-2xl">
-            <Sparkles className="w-10 h-10 text-primary" />
+            <FontAwesomeIcon icon={faStar} className="w-10 h-10 text-primary" />
           </div>
         </div>
         <h3 className="text-2xl font-bold text-foreground mb-2">let's connect!</h3>
@@ -27,7 +29,7 @@ function ContactCard() {
           href="mailto:ama367@sfu.ca"
           className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-colors group"
         >
-          <Mail size={20} className="text-primary group-hover:scale-110 transition-transform" />
+          <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
           <span className="text-foreground font-medium">email</span>
           <span className="ml-auto text-sm text-muted-foreground">ama367@sfu.ca</span>
         </a>
@@ -37,7 +39,7 @@ function ContactCard() {
           rel="noopener noreferrer"
           className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-colors group"
         >
-          <Linkedin size={20} className="text-primary group-hover:scale-110 transition-transform" />
+          <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
           <span className="text-foreground font-medium">linkedin</span>
           <span className="ml-auto text-sm text-muted-foreground">/teddymalhan</span>
         </a>
@@ -47,7 +49,7 @@ function ContactCard() {
           rel="noopener noreferrer"
           className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-colors group"
         >
-          <Github size={20} className="text-primary group-hover:scale-110 transition-transform" />
+          <FontAwesomeIcon icon={faGithub} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
           <span className="text-foreground font-medium">github</span>
           <span className="ml-auto text-sm text-muted-foreground">/teddymalhan</span>
         </a>
