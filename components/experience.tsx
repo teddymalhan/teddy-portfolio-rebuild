@@ -42,128 +42,128 @@ export function Experience() {
         <div className="space-y-8">
           {/* Profile Image Placeholder */}
           {/* Work & Education Section */}
-          <div className="bg-card/50 rounded-2xl p-6 border border-border">
-            <div className="flex items-center gap-3 mb-6">
+          <div className="bg-card/50 rounded-2xl p-4 sm:p-6 border border-border">
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
               <Briefcase className="w-5 h-5 text-muted-foreground" />
               <h2 className="text-lg font-medium text-foreground">work & education</h2>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Electronic Arts */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
                     <img 
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5EbAYJ4fnvZp8PBJa0gDeO7uEvmlAJjurig&s" 
                       alt="EA logo" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="font-medium text-foreground">electronic arts</div>
-                    <div className="text-sm text-muted-foreground">software engineer intern</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground truncate">electronic arts</div>
+                    <div className="text-sm text-muted-foreground truncate">software engineer intern</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground/70">may 2025 — aug 2025</div>
+                <div className="text-xs sm:text-sm text-muted-foreground/70 flex-shrink-0">may 2025 — aug 2025</div>
               </div>
 
               {/* Dialpad */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                     <img 
                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzji6wOPSF5w3pA8ATOaizQN2w-wFIs8FhKA&s" 
                       alt="Dialpad logo" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="font-medium text-foreground">dialpad</div>
-                    <div className="text-sm text-muted-foreground">software engineer intern</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground truncate">dialpad</div>
+                    <div className="text-sm text-muted-foreground truncate">software engineer intern</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground/70">jan 2025 — apr 2025</div>
+                <div className="text-xs sm:text-sm text-muted-foreground/70 flex-shrink-0">jan 2025 — apr 2025</div>
               </div>
 
               {/* SFU */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
                     <img 
                       src="https://praxis.encommun.io/media/notes/note_12478/sfu.jpg" 
                       alt="SFU logo" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="font-medium text-foreground">simon fraser university</div>
-                    <div className="text-sm text-muted-foreground">studying computer science</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground truncate">simon fraser university</div>
+                    <div className="text-sm text-muted-foreground truncate">studying computer science</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground/70">expected 2027</div>
+                <div className="text-xs sm:text-sm text-muted-foreground/70 flex-shrink-0">expected 2027</div>
               </div>
             </div>
           </div>
 
           {/* Volunteering Section */}
-          <div className="bg-card/50 rounded-2xl p-6 border border-border">
-            <div className="flex items-center gap-3 mb-6">
+          <div className="bg-card/50 rounded-2xl p-4 sm:p-6 border border-border">
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
               <Heart className="w-5 h-5 text-muted-foreground" />
               <h2 className="text-lg font-medium text-foreground">volunteering</h2>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* SFU Blueprint */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
                     <img 
                       src="https://media.licdn.com/dms/image/v2/D560BAQGUjTCDhAjcFA/company-logo_200_200/company-logo_200_200/0/1690849546053/sfu_blueprint_logo?e=2147483647&v=beta&t=JFlsmyor7g50Tsl22WLuHPB8UODRlSMUKJ91Ek3vOxU"
-                      alt="SFU logo" 
+                      alt="SFU Blueprint logo" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="font-medium text-foreground">sfu blueprint - reel youth</div>
-                    <div className="text-sm text-muted-foreground">software developer</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground truncate">sfu blueprint - reel youth</div>
+                    <div className="text-sm text-muted-foreground truncate">software developer</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground/70">sept 2024 — april 2025</div>
+                <div className="text-xs sm:text-sm text-muted-foreground/70 flex-shrink-0">sept 2024 — april 2025</div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
                      <img 
                       src="https://media.licdn.com/dms/image/v2/C560BAQHKP2Tu00J6Cw/company-logo_200_200/company-logo_200_200/0/1678590187185/develop_for_good_logo?e=2147483647&v=beta&t=acs0ifffs2qrncn6j1ldjNP5QeNalM6WGXf69IpGVUg" 
                       alt="Develop for Good logo" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="font-medium text-foreground">develop for good</div>
-                    <div className="text-sm text-muted-foreground">software developer</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground truncate">develop for good</div>
+                    <div className="text-sm text-muted-foreground truncate">software developer</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground/70">sept 2024 — feb 2025</div>
+                <div className="text-xs sm:text-sm text-muted-foreground/70 flex-shrink-0">sept 2024 — feb 2025</div>
               </div>
 
               {/* CS Peer Tutor */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center flex-shrink-0">
                     <img 
                       src="https://praxis.encommun.io/media/notes/note_12478/sfu.jpg" 
                       alt="SFU logo" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div>
-                    <div className="font-medium text-foreground">cs peer tutor</div>
-                    <div className="text-sm text-muted-foreground">tutor at sfu</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-foreground truncate">cs peer tutor</div>
+                    <div className="text-sm text-muted-foreground truncate">tutor at sfu</div>
                   </div>
                 </div>
-                <div className="text-sm text-muted-foreground/70">2024</div>
+                <div className="text-xs sm:text-sm text-muted-foreground/70 flex-shrink-0">2024</div>
               </div>
             </div>
           </div>
