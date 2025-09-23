@@ -75,9 +75,7 @@ export function Contact() {
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <div className="h-auto bg-card/50 backdrop-blur-sm hover:bg-card/80">
-            <ContactCard />
-          </div>
+          <ContactCard />
         </div>
       </div>
     </section>
