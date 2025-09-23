@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
@@ -16,6 +17,9 @@ export function Navigation() {
   const [activeSection, setActiveSection] = useState("")
   const [isAtHero, setIsAtHero] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 })
+  const conductorRef = useRef<any>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,6 +64,27 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  useEffect(() => {
+    const updateCanvasDimensions = () => {
+      setCanvasDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    }
+
+    // Set initial dimensions
+    updateCanvasDimensions()
+
+    // Update on resize
+    window.addEventListener('resize', updateCanvasDimensions)
+    window.addEventListener('orientationchange', updateCanvasDimensions)
+    
+    return () => {
+      window.removeEventListener('resize', updateCanvasDimensions)
+      window.removeEventListener('orientationchange', updateCanvasDimensions)
+    }
+  }, [])
+
   const scrollToSection = (href: string) => {
     const sectionId = href.slice(1)
     const element = document.getElementById(sectionId)
@@ -74,13 +99,29 @@ export function Navigation() {
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
   }
 
+  const triggerConfetti = () => {
+    if (conductorRef.current) {
+      conductorRef.current.run({ speed: 3, duration: 1000 })
+    }
+  }
+
+  const handleConfettiInit = ({ conductor }: { conductor: any }) => {
+    conductorRef.current = conductor
+  }
+
   return (
     <>
       {/* Desktop Navigation */}
       <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-2xl">🧸</div>
+            <button 
+              onClick={triggerConfetti}
+              className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
+              aria-label="Trigger confetti"
+            >
+              🧸
+            </button>
 
             <div className="flex space-x-1">
               {navItems.map((item) => (
@@ -111,7 +152,13 @@ export function Navigation() {
       <nav className="md:hidden fixed top-4 left-4 right-4 z-50">
         <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
-            <div className="text-2xl">🧸</div>
+            <button 
+              onClick={triggerConfetti}
+              className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
+              aria-label="Trigger confetti"
+            >
+              🧸
+            </button>
             
             <div className="flex items-center gap-2">
               <ThemeToggle />
@@ -155,6 +202,20 @@ export function Navigation() {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Confetti Component */}
+      <Fireworks 
+        onInit={handleConfettiInit}
+        width={canvasDimensions.width}
+        height={canvasDimensions.height}
+        style={{
+          position: 'fixed',
+          pointerEvents: 'none',
+          top: 0,
+          left: 0,
+          zIndex: 9999
+        }}
+      />
     </>
   )
 }
