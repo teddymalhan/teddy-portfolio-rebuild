@@ -86,7 +86,7 @@ const CustomCursor = () => {
     }, []);
 
     return (
-        <div className="max-lg:hidden z-50">
+        <div className="hidden md:block z-50">
             <div className="follower w-[50px] h-[50px] rounded-full bg-transparent border-white border-2 border-solid fixed z-50 mix-blend-difference pointer-events-none"></div>
             <div className="cursorCustom w-[10px] h-[10px] rounded-full bg-white fixed z-50 mix-blend-difference pointer-events-none"></div>
         </div>
