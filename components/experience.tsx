@@ -6,8 +6,8 @@ import { TextHighlighter } from "./fancy/text/text-highlighter"
 
 export function Experience() {
   return (
-    <div id="experience" className="min-h-screen text-foreground px-4 sm:px-8 lg:px-16 py-8 lg:py-16">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-start md:bg-card/20 md:hover:bg-card/80 md:rounded-3xl md:p-8 lg:p-12 md:border md:border-border md:shadow-lg md:transition-colors md:duration-300">
+    <div id="experience" className="min-h-screen text-foreground px-4 sm:px-8 lg:px-16 py-8 lg:py-16 bg-background">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
         {/* Left Content */}
         <div className="space-y-8">
           <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-balance">
