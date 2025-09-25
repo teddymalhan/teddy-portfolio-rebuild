@@ -139,6 +139,10 @@
   
   * {
     @apply border-border outline-ring/50;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   @media (min-width: 768px) {
@@ -181,4 +185,17 @@
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: oklch(0.65 0.2 240);
+}
+
+/* Utility classes for text selection */
+.selectable-text {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+.copy-button {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
 }

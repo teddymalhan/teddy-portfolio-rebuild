@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { cn } from "@/lib/utils"
+import { CopyButton } from "@/components/ui/copy-button"
 
 function BentoCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
@@ -25,34 +26,57 @@ function ContactCard() {
       </div>
       
       <div className="flex flex-col gap-3">
-        <a
-          href="mailto:ama367@sfu.ca"
-          className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-colors group"
-        >
-          <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-          <span className="text-foreground font-medium">email</span>
-          <span className="ml-auto text-sm text-muted-foreground">ama367@sfu.ca</span>
-        </a>
-        <a
-          href="https://linkedin.com/in/teddymalhan"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-colors group"
-        >
-          <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-          <span className="text-foreground font-medium">linkedin</span>
-          <span className="ml-auto text-sm text-muted-foreground">/teddymalhan</span>
-        </a>
-        <a
-          href="https://github.com/teddymalhan"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/10 transition-colors group"
-        >
-          <FontAwesomeIcon icon={faGithub} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-          <span className="text-foreground font-medium">github</span>
-          <span className="ml-auto text-sm text-muted-foreground">/teddymalhan</span>
-        </a>
+        <div className="contact-item p-3 rounded-xl hover:bg-primary/10 transition-colors group">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <a
+              href="mailto:ama367@sfu.ca"
+              className="flex items-center gap-3 min-w-0 flex-1"
+            >
+              <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform flex-shrink-0" />
+              <span className="text-foreground font-medium flex-shrink-0">email</span>
+            </a>
+            <CopyButton text="ama367@sfu.ca" className="flex-shrink-0" />
+          </div>
+          <div className="mt-2 ml-8 text-sm text-muted-foreground selectable-text break-all">
+            ama367@sfu.ca
+          </div>
+        </div>
+        
+        <div className="contact-item p-3 rounded-xl hover:bg-primary/10 transition-colors group">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <a
+              href="https://linkedin.com/in/teddymalhan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 min-w-0 flex-1"
+            >
+              <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform flex-shrink-0" />
+              <span className="text-foreground font-medium flex-shrink-0">linkedin</span>
+            </a>
+            <CopyButton text="https://linkedin.com/in/teddymalhan" className="flex-shrink-0" />
+          </div>
+          <div className="mt-2 ml-8 text-sm text-muted-foreground selectable-text break-all">
+            linkedin.com/in/teddymalhan
+          </div>
+        </div>
+        
+        <div className="contact-item p-3 rounded-xl hover:bg-primary/10 transition-colors group">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <a
+              href="https://github.com/teddymalhan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 min-w-0 flex-1"
+            >
+              <FontAwesomeIcon icon={faGithub} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform flex-shrink-0" />
+              <span className="text-foreground font-medium flex-shrink-0">github</span>
+            </a>
+            <CopyButton text="https://github.com/teddymalhan" className="flex-shrink-0" />
+          </div>
+          <div className="mt-2 ml-8 text-sm text-muted-foreground selectable-text break-all">
+            github.com/teddymalhan
+          </div>
+        </div>
       </div>
     </BentoCard>
   );
