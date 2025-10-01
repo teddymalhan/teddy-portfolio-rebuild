@@ -29,12 +29,28 @@ export function Navigation() {
   const [showConfetti, setShowConfetti] = useState(false)
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 })
   const [commandOpen, setCommandOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
   const conductorRef = useRef<any>(null)
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
       const windowHeight = window.innerHeight
+      
+      // Handle navigation visibility
+      if (scrollPosition < 100) {
+        // Always show when at top
+        setIsVisible(true)
+      } else if (scrollPosition > lastScrollY) {
+        // Scrolling down - hide navigation
+        setIsVisible(false)
+      } else if (lastScrollY - scrollPosition > 5) {
+        // Scrolling up - show navigation (with small threshold to avoid jitter)
+        setIsVisible(true)
+      }
+      
+      setLastScrollY(scrollPosition)
       
       // Check if we're at the hero section (top of the page)
       if (scrollPosition < windowHeight / 2) {
@@ -72,7 +88,7 @@ export function Navigation() {
     window.addEventListener("scroll", handleScroll)
     handleScroll() // Check initial position
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [lastScrollY])
 
   useEffect(() => {
     const updateCanvasDimensions = () => {
@@ -138,7 +154,18 @@ export function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block fixed top-4 left-4 right-4 z-50">
+      <motion.nav 
+        className="hidden md:block fixed top-4 left-4 right-4 z-50"
+        initial={{ y: 0, opacity: 1 }}
+        animate={{ 
+          y: isVisible ? 0 : -100,
+          opacity: isVisible ? 1 : 0
+        }}
+        transition={{ 
+          duration: 0.3,
+          ease: "easeInOut"
+        }}
+      >
         <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
             {/* Left side - Logo and Navigation */}
@@ -188,10 +215,21 @@ export function Navigation() {
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Navigation */}
-      <nav className="md:hidden fixed top-4 left-4 right-4 z-50">
+      <motion.nav 
+        className="md:hidden fixed top-4 left-4 right-4 z-50"
+        initial={{ y: 0, opacity: 1 }}
+        animate={{ 
+          y: isVisible ? 0 : -100,
+          opacity: isVisible ? 1 : 0
+        }}
+        transition={{ 
+          duration: 0.3,
+          ease: "easeInOut"
+        }}
+      >
         <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
             <button 
@@ -213,7 +251,7 @@ export function Navigation() {
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
