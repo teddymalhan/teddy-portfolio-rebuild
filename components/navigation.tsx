@@ -3,8 +3,17 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Search, Home, Briefcase, Mail, User, FileText, Github, Linkedin } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandSeparator,
+} from "@/components/ui/command"
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 
 const navItems = [
@@ -19,6 +28,7 @@ export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 })
+  const [commandOpen, setCommandOpen] = useState(false)
   const conductorRef = useRef<any>(null)
 
   useEffect(() => {
@@ -109,39 +119,71 @@ export function Navigation() {
     conductorRef.current = conductor
   }
 
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setCommandOpen((open) => !open)
+      }
+    }
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
+
+  const runCommand = (command: () => void) => {
+    setCommandOpen(false)
+    command()
+  }
+
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4">
+      <nav className="hidden md:block fixed top-4 left-4 right-4 z-50">
+        <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
-            <button 
-              onClick={triggerConfetti}
-              className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
-              aria-label="Trigger confetti"
-            >
-              🧸
-            </button>
+            {/* Left side - Logo and Navigation */}
+            <div className="flex items-center gap-6">
+              <button 
+                onClick={triggerConfetti}
+                className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
+                aria-label="Trigger confetti"
+              >
+                🧸
+              </button>
 
-            <div className="flex space-x-1">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
-                    activeSection === item.href.slice(1) 
-                      ? "text-primary bg-primary/10" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.name}
-                </motion.button>
-              ))}
+              <div className="flex space-x-1">
+                {navItems.map((item) => (
+                  <motion.button
+                    key={item.name}
+                    onClick={() => scrollToSection(item.href)}
+                    className={`px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${
+                      activeSection === item.href.slice(1) 
+                        ? "text-primary bg-primary/10" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.name}
+                  </motion.button>
+                ))}
+              </div>
             </div>
 
-            <div>
+            {/* Right side - Search Bar and Theme Toggle */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setCommandOpen(true)}
+                className="flex items-center gap-3 px-4 py-2 text-sm bg-background border border-border rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-muted-foreground min-w-[240px]"
+              >
+                <Search className="w-4 h-4 shrink-0" />
+                <span className="flex-1 text-left">Search website...</span>
+                <div className="flex items-center gap-1 text-xs text-muted-foreground/60">
+                  <span className="text-xs">⌘</span>
+                  <span className="text-xs">K</span>
+                </div>
+              </button>
+              
               <ThemeToggle />
             </div>
           </div>
@@ -203,6 +245,82 @@ export function Navigation() {
         )}
       </AnimatePresence>
       
+      {/* Command Dialog */}
+      <CommandDialog 
+        open={commandOpen} 
+        onOpenChange={setCommandOpen}
+        title="Search Portfolio"
+        description="Quickly navigate to any section or find what you're looking for"
+      >
+        <CommandInput placeholder="Type to search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          
+          <CommandGroup heading="Navigation">
+            <CommandItem onSelect={() => runCommand(() => scrollToSection("#home"))}>
+              <Home className="mr-2 h-4 w-4" />
+              <span>Home</span>
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => scrollToSection("#experience"))}>
+              <Briefcase className="mr-2 h-4 w-4" />
+              <span>My Experience</span>
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => scrollToSection("#contact"))}>
+              <Mail className="mr-2 h-4 w-4" />
+              <span>Get in Touch</span>
+            </CommandItem>
+          </CommandGroup>
+
+          <CommandSeparator />
+
+          <CommandGroup heading="Quick Actions">
+            <CommandItem onSelect={() => runCommand(() => {
+              const link = document.createElement('a')
+              link.href = '/Teddy_Malhan_Resume.pdf'
+              link.download = 'Teddy_Malhan_Resume.pdf'
+              link.click()
+            })}>
+              <FileText className="mr-2 h-4 w-4" />
+              <span>Download Resume</span>
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => {
+              window.open('https://github.com/teddymalhan', '_blank')
+            })}>
+              <Github className="mr-2 h-4 w-4" />
+              <span>View GitHub Profile</span>
+            </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => {
+              window.open('https://linkedin.com/in/teddymalhan', '_blank')
+            })}>
+              <Linkedin className="mr-2 h-4 w-4" />
+              <span>Connect on LinkedIn</span>
+            </CommandItem>
+          </CommandGroup>
+
+          <CommandSeparator />
+
+          <CommandGroup heading="Projects">
+            <CommandItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Portfolio Website</span>
+            </CommandItem>
+            <CommandItem>
+              <Briefcase className="mr-2 h-4 w-4" />
+              <span>Professional Projects</span>
+            </CommandItem>
+          </CommandGroup>
+
+          <CommandSeparator />
+
+          <CommandGroup heading="Fun">
+            <CommandItem onSelect={() => runCommand(() => triggerConfetti())}>
+              <span className="mr-2">🎉</span>
+              <span>Trigger Confetti</span>
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
+
       {/* Confetti Component */}
       <Fireworks 
         onInit={handleConfettiInit}
