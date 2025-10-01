@@ -115,8 +115,12 @@ export function Navigation() {
     const sectionId = href.slice(1)
     const element = document.getElementById(sectionId)
     if (element) {
-      const navHeight = 80 // Account for fixed navigation height
-      const elementPosition = element.offsetTop - navHeight
+      // Show navigation temporarily for smooth UX
+      setIsVisible(true)
+      
+      // Align section content exactly with viewport top (no offset)
+      const elementPosition = element.offsetTop
+      
       window.scrollTo({
         top: elementPosition,
         behavior: "smooth"
