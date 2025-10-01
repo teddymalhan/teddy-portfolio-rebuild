@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Search, Home, Briefcase, Mail, User, FileText, Github, Linkedin } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import {
   CommandDialog,
   CommandInput,
@@ -215,7 +215,7 @@ export function Navigation() {
                 </div>
               </button>
               
-              <ThemeToggle />
+              <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
             </div>
           </div>
         </div>
@@ -245,7 +245,7 @@ export function Navigation() {
             </button>
             
             <div className="flex items-center gap-2">
-              <ThemeToggle />
+              <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 rounded-full text-foreground hover:text-primary hover:bg-accent/20 transition-all duration-200"
