@@ -18,8 +18,8 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
-  { name: "🛠️ some stuff I’ve worked on", href: "#projects", emoji: "" },
   { name: "💼 my experience", href: "#experience", emoji: "" },
+  { name: "🛠️ some stuff I’ve worked on", href: "#projects", emoji: "" },
   { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
 
@@ -39,15 +39,21 @@ export function Navigation() {
       const scrollPosition = window.scrollY
       const windowHeight = window.innerHeight
       
-      // Handle navigation visibility
-      if (scrollPosition < 100) {
-        // Always show when at top
-        setIsVisible(true)
-      } else if (scrollPosition > lastScrollY) {
-        // Scrolling down - hide navigation
-        setIsVisible(false)
-      } else if (lastScrollY - scrollPosition > 5) {
-        // Scrolling up - show navigation (with small threshold to avoid jitter)
+      // Handle navigation visibility for mobile only
+      const isMobile = window.innerWidth < 768 // md breakpoint
+      if (isMobile) {
+        if (scrollPosition < 100) {
+          // Always show when at top
+          setIsVisible(true)
+        } else if (scrollPosition > lastScrollY) {
+          // Scrolling down - hide navigation
+          setIsVisible(false)
+        } else if (lastScrollY - scrollPosition > 5) {
+          // Scrolling up - show navigation (with small threshold to avoid jitter)
+          setIsVisible(true)
+        }
+      } else {
+        // Always visible on desktop
         setIsVisible(true)
       }
       
@@ -87,8 +93,12 @@ export function Navigation() {
     }
 
     window.addEventListener("scroll", handleScroll)
+    window.addEventListener("resize", handleScroll) // Re-check on resize
     handleScroll() // Check initial position
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", handleScroll)
+    }
   }, [lastScrollY])
 
   useEffect(() => {
@@ -119,8 +129,13 @@ export function Navigation() {
       // Show navigation temporarily for smooth UX
       setIsVisible(true)
       
-      // Align section content exactly with viewport top (no offset)
-      const elementPosition = element.offsetTop
+      // Add offset for desktop to account for fixed navigation bar
+      const isMobile = window.innerWidth < 768 // md breakpoint
+      const navBarHeight = 80 // Approximate height of the navigation bar
+      const additionalOffset = 20 // Extra pixels for breathing room
+      const offset = isMobile ? 0 : navBarHeight + additionalOffset
+      
+      const elementPosition = element.offsetTop - offset
       
       window.scrollTo({
         top: elementPosition,

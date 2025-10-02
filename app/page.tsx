@@ -21,8 +21,8 @@ export default function Home() {
         <main>
           <Hero />
           {/* <About /> */}
-          <ProjectsBento />
           <Experience />
+          <ProjectsBento />
           <Contact />
         </main>
       </div>
