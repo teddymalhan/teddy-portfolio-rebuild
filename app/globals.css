@@ -143,11 +143,7 @@
     -ms-user-select: none;
   }
 
-  @media (min-width: 768px) {
-    * {
-      cursor: none;
-    }
-  }
+
 
   body {
     @apply bg-background text-foreground;
