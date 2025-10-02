@@ -6,7 +6,7 @@ import { TextHighlighter } from "./fancy/text/text-highlighter"
 
 export function Experience() {
   return (
-    <div id="experience" className="min-h-screen text-foreground px-4 sm:px-8 lg:px-16 py-8 lg:py-16 bg-background">
+    <div id="experience" className="min-h-screen text-foreground px-4 sm:px-8 lg:px-16 py-8 lg:py-16">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
         {/* Left Content */}
         <div className="space-y-8">
