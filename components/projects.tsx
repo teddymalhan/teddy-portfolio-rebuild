@@ -100,22 +100,22 @@ const projects = [
     featured: true,
   },
   {
-    title: "ChaosLearn",
-    period: "2025",
+    title: "CommitWise",
+    period: "2024",
     description: (
       <>
-        <span className="bg-purple-600 text-white px-2 py-1 rounded font-bold">Mountain Madness 2025 Winner</span>: Awarded runner-up for ChaosLearn, an{" "}
-        <span className="bg-cyan-600 text-white px-2 py-1 rounded font-bold">AI powered learning assistant</span> that adapts to individual learning styles and provides personalized educational content.
+        A smart <span className="bg-blue-600 text-white px-2 py-1 rounded font-bold">Git commit assistant</span> that analyzes code changes and generates meaningful,{" "}
+        <span className="bg-purple-600 text-white px-2 py-1 rounded font-bold">conventional commit messages</span> using{" "}
+        <span className="bg-emerald-600 text-white px-2 py-1 rounded font-bold">AI</span>. Helps developers maintain consistent and descriptive commit histories.
       </>
     ),
     achievements: [
-      "Runner-up at Mountain Madness 2025 hackathon",
-      "Implemented adaptive learning algorithms",
+      "Automated commit message generation with AI analysis",
+      "Follows conventional commit standards for better project organization",
     ],
-    technologies: ["Python", "FastAPI", "React", "OpenAI", "PostgreSQL"],
+    technologies: ["TypeScript", "Node.js", "OpenAI", "Git"],
     github: "#",
     demo: "#",
-    award: "2nd Place",
     featured: true,
   },
 ]

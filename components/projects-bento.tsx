@@ -85,26 +85,24 @@ const projects = [
     ),
   },
   {
-    name: "ChaosLearn",
-    title: "ChaosLearn",
-    period: "2025",
-    description: "🥈 Mountain Madness 2025 Runner-up. An AI-powered learning assistant that adapts to individual learning styles.",
+    name: "CommitWise",
+    title: "CommitWise",
+    period: "2024",
+    description: "A smart Git commit assistant that analyzes code changes and generates meaningful, conventional commit messages using AI.",
     className: "col-span-3 lg:col-span-2",
     href: "#",
-    cta: "Explore",
-    technologies: ["Python", "FastAPI", "React", "OpenAI", "PostgreSQL"],
+    cta: "View Project",
+    technologies: ["TypeScript", "Node.js", "OpenAI", "Git"],
     github: "#",
     demo: "#",
-    award: "2nd Place",
-    featured: true,
     background: (
       <div className="absolute inset-0">
         <div className="absolute inset-0 overflow-hidden">
           <Image
-            src="/chaoslearn.jpg"
-            alt="ChaosLearn"
+            src="/commitwise.png"
+            alt="CommitWise"
             fill
-            className="object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
           />
         </div>
       </div>
