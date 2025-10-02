@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Search, Home, Briefcase, Mail, User, FileText, Github, Linkedin } from "lucide-react"
+import { Menu, X, Search, Home, Hammer, Briefcase, Mail, FileText, Github, Linkedin } from "lucide-react"
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import {
   CommandDialog,
@@ -18,6 +18,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
+  { name: "🛠️ some stuff I’ve worked on", href: "#projects", emoji: "" },
   { name: "💼 my experience", href: "#experience", emoji: "" },
   { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
@@ -303,6 +304,10 @@ export function Navigation() {
               <Home className="mr-2 h-4 w-4" />
               <span>Home</span>
             </CommandItem>
+            <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
+              <Hammer className="mr-2 h-4 w-4" />
+              <span>Some Stuff I’ve Worked On</span>
+            </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#experience"))}>
               <Briefcase className="mr-2 h-4 w-4" />
               <span>My Experience</span>
@@ -326,13 +331,13 @@ export function Navigation() {
               <span>Download Resume</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => {
-              window.open('https://github.com/teddymalhan', '_blank')
+              window.open("https://github.com/teddymalhan", "_blank")
             })}>
               <Github className="mr-2 h-4 w-4" />
               <span>View GitHub Profile</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => {
-              window.open('https://linkedin.com/in/teddymalhan', '_blank')
+              window.open("https://linkedin.com/in/teddymalhan", "_blank")
             })}>
               <Linkedin className="mr-2 h-4 w-4" />
               <span>Connect on LinkedIn</span>
@@ -342,13 +347,15 @@ export function Navigation() {
           <CommandSeparator />
 
           <CommandGroup heading="Projects">
-            <CommandItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Portfolio Website</span>
+            <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
+              <Hammer className="mr-2 h-4 w-4" />
+              <span>Some Stuff I've Worked On</span>
             </CommandItem>
-            <CommandItem>
-              <Briefcase className="mr-2 h-4 w-4" />
-              <span>Professional Projects</span>
+            <CommandItem onSelect={() => runCommand(() => {
+              window.open("https://github.com/teddymalhan", "_blank")
+            })}>
+              <Github className="mr-2 h-4 w-4" />
+              <span>Explore More on GitHub</span>
             </CommandItem>
           </CommandGroup>
 

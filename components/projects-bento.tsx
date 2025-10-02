@@ -1,0 +1,191 @@
+"use client"
+
+import { CalendarIcon, FileTextIcon } from "@radix-ui/react-icons"
+import { BellIcon, Share2Icon, Trophy, Award, Github, ExternalLink, Briefcase } from "lucide-react"
+import Image from "next/image"
+
+import { cn } from "@/lib/utils"
+import { BentoCard, BentoGrid } from "@/components/ui/bento-grid"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+
+const projects = [
+  {
+    name: "Digital Scorecards",
+    title: "Digital Scorecards",
+    period: "Internship",
+    Icon: Briefcase,
+    iconClassName: "text-white",
+    description: "Built enterprise-grade digital scorecards for Dialpad's contact center, bringing accountability and performance visibility to customer service teams.",
+    href: "https://www.dialpad.com/blog/new-dialpad-features-and-updates-for-the-enterprise-contact-center/?utm_source=chatgpt.com#:~:text=Digital%20dispositions%20and-,digital%20scorecards,-bring%20accountability%20and",
+    cta: "Read More",
+    className: "col-span-3 lg:col-span-2",
+    technologies: ["React", "TypeScript", "Node.js", "PostgreSQL"],
+    github: "#",
+    demo: "https://www.dialpad.com/blog/new-dialpad-features-and-updates-for-the-enterprise-contact-center/?utm_source=chatgpt.com#:~:text=Digital%20dispositions%20and-,digital%20scorecards,-bring%20accountability%20and",
+    internship: true,
+    background: (
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/digital_scorecards.webp"
+            alt="Digital Scorecards"
+            fill
+            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: "WasteWise",
+    title: "WasteWise",
+    period: "Oct 2024",
+    Icon: Share2Icon,
+    description: "Architected a FAISS & NLP based waste sorting system powered by RAG, OpenAI Embeddings, parsing 20k+ mappings of food items to bins.",
+    href: "https://devpost.com/software/wastewise-agcrsi",
+    cta: "Learn More",
+    className: "col-span-3 lg:col-span-1",
+    technologies: ["React", "Python", "FAISS", "OpenAI"],
+    github: "#",
+    demo: "https://devpost.com/software/wastewise-agcrsi",
+    background: (
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/wastewise.jpg"
+            alt="WasteWise"
+            fill
+            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: "GradGains",
+    title: "GradGains",
+    period: "2024",
+    Icon: Trophy,
+    description: "🏆 Google DSC Hackathon Winner - Best Project. A financial social media platform designed to help students manage their finances.",
+    className: "col-span-3 lg:col-span-1",
+    href: "#",
+    cta: "View Project",
+    technologies: ["React", "Node.js", "MongoDB", "Express"],
+    github: "#",
+    demo: "#",
+    award: "1st Place",
+    featured: true,
+    background: (
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/grad-gains.png"
+            alt="GradGains"
+            fill
+            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    name: "ChaosLearn",
+    title: "ChaosLearn",
+    period: "2025",
+    Icon: Award,
+    description: "🥈 Mountain Madness 2025 Runner-up. An AI-powered learning assistant that adapts to individual learning styles.",
+    className: "col-span-3 lg:col-span-2",
+    href: "#",
+    cta: "Explore",
+    technologies: ["Python", "FastAPI", "React", "OpenAI", "PostgreSQL"],
+    github: "#",
+    demo: "#",
+    award: "2nd Place",
+    featured: true,
+    background: (
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/chaoslearn.jpg"
+            alt="ChaosLearn"
+            fill
+            className="object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          />
+        </div>
+      </div>
+    ),
+  },
+]
+
+export function ProjectsBento() {
+  return (
+    <section id="projects" className="py-20 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text mb-6">
+            some stuff I’ve worked on 🛠️
+          </h2>
+        </div>
+
+        <BentoGrid>
+          {projects.map((project, idx) => (
+            <BentoCard key={idx} {...project}>
+              <div className="absolute bottom-4 right-4 flex space-x-2 z-10">
+                <Button 
+                  className="bg-gradient-to-r from-gray-800 to-black text-white hover:from-gray-700 hover:to-gray-900 transform hover:scale-110 transition-all duration-300 shadow-lg" 
+                  size="sm" 
+                  onClick={(e) => {
+                    e.preventDefault()
+                    window.open(project.github, "_blank")
+                  }}
+                >
+                  <Github className="w-4 h-4" />
+                </Button>
+                <Button 
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transform hover:scale-110 transition-all duration-300 shadow-lg" 
+                  size="sm" 
+                  onClick={(e) => {
+                    e.preventDefault()
+                    window.open(project.demo, "_blank")
+                  }}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </Button>
+              </div>
+              {project.award && (
+                <Badge className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white font-bold shadow-lg animate-pulse border-0 z-10">
+                  <Trophy className="w-3 h-3 mr-1" />
+                  {project.award}
+                </Badge>
+              )}
+              {project.internship && (
+                <Badge className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white font-bold shadow-lg border-0 z-10">
+                  <Briefcase className="w-3 h-3 mr-1 color-white" />
+                  Internship
+                </Badge>
+              )}
+              <div className="absolute bottom-20 left-4 right-4 z-10">
+                <div className="flex flex-wrap gap-2">
+                  {project.technologies.slice(0, 4).map((tech, techIdx) => (
+                    <span
+                      key={techIdx}
+                      className="rounded-full bg-white/90 dark:bg-gray-800/90 px-3 py-1 text-xs font-semibold backdrop-blur-sm border border-gray-200 dark:border-gray-700"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                  {project.technologies.length > 4 && (
+                    <span className="rounded-full bg-white/90 dark:bg-gray-800/90 px-3 py-1 text-xs font-semibold backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+                      +{project.technologies.length - 4} more
+                    </span>
+                  )}
+                </div>
+              </div>
+            </BentoCard>
+          ))}
+        </BentoGrid>
+      </div>
+    </section>
+  )
+}

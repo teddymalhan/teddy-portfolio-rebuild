@@ -3,6 +3,7 @@ import { Hero } from "@/components/hero"
 import { About } from "@/components/about"
 import { Experience } from "@/components/experience"
 import { Projects } from "@/components/projects"
+import { ProjectsBento } from "@/components/projects-bento"
 import { Contact } from "@/components/contact"
 import { AnimatedBackground } from "@/components/animated-background"
 import { FloatingElements } from "@/components/floating-elements"
@@ -20,8 +21,8 @@ export default function Home() {
         <main>
           <Hero />
           {/* <About /> */}
+          <ProjectsBento />
           <Experience />
-          {/* <Projects /> */}
           <Contact />
         </main>
       </div>
