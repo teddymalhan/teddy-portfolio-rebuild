@@ -20,10 +20,41 @@ export default function Home() {
         <Navigation />
         <main>
           <Hero />
-          {/* <About /> */}
-          <Experience />
-          <ProjectsBento />
-          <Contact />
+          
+          {/* Frosted Glass Wrapper for all sections below hero */}
+          <div className="relative">
+            {/* Frosted Glass Backdrop */}
+            <div className="absolute inset-0 h-[200%] pointer-events-none">
+              <div 
+                className="absolute inset-0 h-full backdrop-blur-xl bg-gradient-to-br from-background/60 via-background/40 to-card/60"
+                style={{
+                  maskImage: 'linear-gradient(to bottom, black 0% 50%, transparent 50% 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, black 0% 50%, transparent 50% 100%)',
+                }}
+              />
+            </div>
+            
+            {/* Glassy Edge */}
+            <div 
+              className="absolute bottom-0 left-0 right-0 h-full pointer-events-none"
+              style={{
+                backdropFilter: 'blur(12px) brightness(1.1)',
+                WebkitBackdropFilter: 'blur(12px) brightness(1.1)',
+                background: 'hsl(0deg 0% 100% / 0.05)',
+                transform: 'translateY(100%)',
+                maskImage: 'linear-gradient(to bottom, black 0, black 6px, transparent 6px)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 0, black 6px, transparent 6px)',
+              }}
+            />
+
+            {/* Content */}
+            <div className="relative">
+              {/* <About /> */}
+              <Experience />
+              <ProjectsBento />
+              <Contact />
+            </div>
+          </div>
         </main>
       </div>
     </div>
