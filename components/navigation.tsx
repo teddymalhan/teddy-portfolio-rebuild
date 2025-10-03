@@ -19,7 +19,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
   { name: "💼 my experience", href: "#experience", emoji: "" },
-  { name: "🛠️ some stuff I’ve worked on", href: "#projects", emoji: "" },
+  { name: "🛠️ projects", href: "#projects", emoji: "" },
   { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
 
@@ -321,7 +321,7 @@ export function Navigation() {
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
               <Hammer className="mr-2 h-4 w-4" />
-              <span>Some Stuff I’ve Worked On</span>
+              <span>Projects</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#experience"))}>
               <Briefcase className="mr-2 h-4 w-4" />
@@ -364,7 +364,7 @@ export function Navigation() {
           <CommandGroup heading="Projects">
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
               <Hammer className="mr-2 h-4 w-4" />
-              <span>Some Stuff I've Worked On</span>
+              <span>Projects</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => {
               window.open("https://github.com/teddymalhan", "_blank")

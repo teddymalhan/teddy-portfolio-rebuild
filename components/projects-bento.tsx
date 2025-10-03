@@ -116,7 +116,7 @@ export function ProjectsBento() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold bg-clip-text mb-6">
-            here&apos;s some stuff I’ve worked on 🛠️
+            projects 🛠️
           </h2>
         </div>
 
