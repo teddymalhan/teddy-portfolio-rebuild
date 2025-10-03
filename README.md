@@ -64,8 +64,8 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/teddymalhan/v0-portfolio-rebuild.git
-   cd v0-portfolio-rebuild
+   git clone https://github.com/teddymalhan/teddy-portfolio-rebuild.git
+   cd teddy-portfolio-rebuild
    ```
 
 2. **Install dependencies**
@@ -129,7 +129,7 @@ npm run lint
 ## 📁 Project Structure
 
 ```
-v0-portfolio-rebuild/
+teddy-portfolio-rebuild/
 ├── app/                      # Next.js App Router
 │   ├── globals.css          # Global styles
 │   ├── layout.tsx           # Root layout
