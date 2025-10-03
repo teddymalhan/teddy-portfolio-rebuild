@@ -54,7 +54,7 @@ const experiences: ExperienceItem[] = [
   {
     company: "Simon Fraser University",
     role: "Computer Science",
-    period: "2022 - 2027",
+    period: "Expected May 2027",
     location: "Burnaby, BC",
     logo: "https://praxis.encommun.io/media/notes/note_12478/sfu.jpg",
     logoStyle: "circular",
@@ -106,7 +106,7 @@ export function Experience() {
                       {experience.tags.map((tag: string) => (
                         <div
                           key={tag}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-background border border-border/50 text-foreground/80 text-[13px] font-medium tracking-tight shadow-sm hover:bg-accent/50 hover:border-border transition-colors"
+                          className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-background border border-border/50 text-foreground/80 text-[13px] font-medium tracking-tight shadow-sm hover:bg-accent/50 hover:border-border transition-colors"
                         >
                           {tag}
                         </div>
