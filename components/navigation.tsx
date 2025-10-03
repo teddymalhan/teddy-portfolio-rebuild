@@ -19,7 +19,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
   { name: "💼 my experience", href: "#experience", emoji: "" },
-  { name: "🛠️ projects", href: "#projects", emoji: "" },
+  { name: "🛠️ some stuff I’ve worked on", href: "#projects", emoji: "" },
   { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
 
@@ -39,23 +39,8 @@ export function Navigation() {
       const scrollPosition = window.scrollY
       const windowHeight = window.innerHeight
       
-      // Handle navigation visibility for mobile only
-      const isMobile = window.innerWidth < 768 // md breakpoint
-      if (isMobile) {
-        if (scrollPosition < 100) {
-          // Always show when at top
-          setIsVisible(true)
-        } else if (scrollPosition > lastScrollY) {
-          // Scrolling down - hide navigation
-          setIsVisible(false)
-        } else if (lastScrollY - scrollPosition > 5) {
-          // Scrolling up - show navigation (with small threshold to avoid jitter)
-          setIsVisible(true)
-        }
-      } else {
-        // Always visible on desktop
-        setIsVisible(true)
-      }
+      // Navigation always visible on both mobile and desktop
+      setIsVisible(true)
       
       setLastScrollY(scrollPosition)
       
@@ -135,7 +120,8 @@ export function Navigation() {
       const additionalOffset = 20 // Extra pixels for breathing room
       const offset = isMobile ? 0 : navBarHeight + additionalOffset
       
-      const elementPosition = element.offsetTop - offset
+      // Use getBoundingClientRect for accurate positioning with complex layouts
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - offset
       
       window.scrollTo({
         top: elementPosition,
@@ -321,7 +307,7 @@ export function Navigation() {
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
               <Hammer className="mr-2 h-4 w-4" />
-              <span>Projects</span>
+              <span>Some Stuff I’ve Worked On</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#experience"))}>
               <Briefcase className="mr-2 h-4 w-4" />
@@ -364,7 +350,7 @@ export function Navigation() {
           <CommandGroup heading="Projects">
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
               <Hammer className="mr-2 h-4 w-4" />
-              <span>Projects</span>
+              <span>Some Stuff I've Worked On</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => {
               window.open("https://github.com/teddymalhan", "_blank")
