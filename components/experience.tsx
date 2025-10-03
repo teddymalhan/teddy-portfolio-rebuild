@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { Badge } from "./ui/badge"
 import { ShinyButton } from "./ui/shiny-button"
+import { TextHighlighter } from "./fancy/text/text-highlighter"
 
 interface ExperienceItem {
   company: string
@@ -68,7 +69,7 @@ export function Experience() {
       <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20">
         {/* Header */}
         <h1 className="text-4xl lg:text-5xl font-bold mb-20 tracking-tight">
-          Experience
+            Experience 🎉
         </h1>
 
         {/* Experience List */}

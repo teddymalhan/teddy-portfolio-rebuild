@@ -19,7 +19,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks"
 const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
   { name: "💼 my experience", href: "#experience", emoji: "" },
-  { name: "🛠️ some stuff I’ve worked on", href: "#projects", emoji: "" },
+  { name: "🛠️ projects", href: "#projects", emoji: "" },
   { name: "📬 get in touch!", href: "#contact", emoji: "" },
 ]
 
@@ -305,14 +305,14 @@ export function Navigation() {
               <Home className="mr-2 h-4 w-4" />
               <span>Home</span>
             </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
-              <Hammer className="mr-2 h-4 w-4" />
-              <span>Some Stuff I’ve Worked On</span>
-            </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#experience"))}>
               <Briefcase className="mr-2 h-4 w-4" />
               <span>My Experience</span>
             </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
+                  <Hammer className="mr-2 h-4 w-4" />
+                  <span>Projects</span>
+              </CommandItem>
             <CommandItem onSelect={() => runCommand(() => scrollToSection("#contact"))}>
               <Mail className="mr-2 h-4 w-4" />
               <span>Get in Touch</span>
@@ -342,21 +342,6 @@ export function Navigation() {
             })}>
               <Linkedin className="mr-2 h-4 w-4" />
               <span>Connect on LinkedIn</span>
-            </CommandItem>
-          </CommandGroup>
-
-          <CommandSeparator />
-
-          <CommandGroup heading="Projects">
-            <CommandItem onSelect={() => runCommand(() => scrollToSection("#projects"))}>
-              <Hammer className="mr-2 h-4 w-4" />
-              <span>Some Stuff I've Worked On</span>
-            </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => {
-              window.open("https://github.com/teddymalhan", "_blank")
-            })}>
-              <Github className="mr-2 h-4 w-4" />
-              <span>Explore More on GitHub</span>
             </CommandItem>
           </CommandGroup>
 
