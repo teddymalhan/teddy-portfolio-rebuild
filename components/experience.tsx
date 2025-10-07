@@ -112,10 +112,10 @@ export function Experience() {
                           <Badge
                             key={tag}
                             variant="outline"
-                            className="h-9 gap-1.5 px-3 rounded-full border-border/60 text-foreground/85 bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/40"
+                            className="gap-1.5 px-3 py-2 rounded-full border-border/60 text-foreground/85 bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/40 whitespace-normal break-words max-w-[240px] sm:max-w-none"
                           >
                             {emoji && <span className="text-[15px] leading-none">{emoji}</span>}
-                            <span className="text-[13.5px] leading-none font-medium tracking-tight">{text}</span>
+                            <span className="text-[13.5px] leading-snug font-medium tracking-tight">{text}</span>
                           </Badge>
                         )
                       })}

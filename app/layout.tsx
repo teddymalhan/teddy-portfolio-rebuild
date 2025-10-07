@@ -41,7 +41,6 @@ export default function RootLayout({
             <Suspense fallback={null}>
               {children}
             </Suspense>
-            <Footer />
             <Analytics />
           </div>
         </ThemeProvider>
