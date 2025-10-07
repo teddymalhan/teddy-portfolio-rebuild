@@ -145,6 +145,8 @@ export function Experience() {
                               ? 'object-cover scale-185'
                               : experience.company === 'Develop for Good'
                               ? 'object-cover scale-180'
+                              : experience.company === 'SFU Blueprint'
+                              ? 'object-cover scale-180'
                               : experience.logoStyle === 'circular' 
                               ? 'object-cover' 
                               : 'object-contain'
