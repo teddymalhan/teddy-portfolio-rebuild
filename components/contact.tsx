@@ -29,16 +29,16 @@ function ContactCard() {
         <div className="contact-item p-3 rounded-xl hover:bg-primary/10 transition-colors group">
           <div className="flex items-center justify-between gap-2 min-w-0">
             <a
-              href="mailto:ama367@sfu.ca"
+              href="mailto:teddymalhan@gmail.com"
               className="flex items-center gap-3 min-w-0 flex-1"
             >
               <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5 text-primary group-hover:scale-110 transition-transform flex-shrink-0" />
               <span className="text-foreground font-medium flex-shrink-0">email</span>
             </a>
-            <CopyButton text="ama367@sfu.ca" className="flex-shrink-0" />
+            <CopyButton text="teddymalhan@gmail.com" className="flex-shrink-0" />
           </div>
           <div className="mt-2 ml-8 text-sm text-muted-foreground selectable-text break-all">
-            ama367@sfu.ca
+            teddymalhan@gmail.com
           </div>
         </div>
         

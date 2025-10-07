@@ -20,7 +20,7 @@ const navItems = [
   { name: "🏠 home", href: "#home", emoji: "" },
   { name: "💼 my experience", href: "#experience", emoji: "" },
   { name: "🛠️ projects", href: "#projects", emoji: "" },
-  { name: "📬 get in touch!", href: "#contact", emoji: "" },
+  { name: "👤 about me", href: "#about", emoji: "" },
 ]
 
 export function Navigation() {
@@ -313,9 +313,9 @@ export function Navigation() {
                   <Hammer className="mr-2 h-4 w-4" />
                   <span>Projects</span>
               </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => scrollToSection("#contact"))}>
+            <CommandItem onSelect={() => runCommand(() => scrollToSection("#about"))}>
               <Mail className="mr-2 h-4 w-4" />
-              <span>Get in Touch</span>
+              <span>About Me</span>
             </CommandItem>
           </CommandGroup>
 

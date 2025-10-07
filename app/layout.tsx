@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
+import Footer from "@/components/footer"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
             <Suspense fallback={null}>
               {children}
             </Suspense>
+            <Footer />
             <Analytics />
           </div>
         </ThemeProvider>

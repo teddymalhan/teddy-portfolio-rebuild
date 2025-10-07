@@ -52,7 +52,6 @@ export default function Home() {
               <Experience />
               <ProjectsBento />
               <About />
-              <Contact />
             </div>
           </div>
         </main>
