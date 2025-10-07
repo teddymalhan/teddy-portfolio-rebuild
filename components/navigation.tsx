@@ -174,7 +174,7 @@ export function Navigation() {
       <motion.nav 
         role="navigation"
         aria-label="Primary"
-        className="hidden md:block fixed top-4 left-4 right-4 z-50"
+        className="hidden md:block fixed top-4 left-0 right-0 z-50 px-6"
         initial={prefersReducedMotion ? false : { y: 0, opacity: 1 }}
         animate={prefersReducedMotion ? {} : { 
           y: isVisible ? 0 : -100,
@@ -185,7 +185,7 @@ export function Navigation() {
           ease: "easeInOut"
         }}
       >
-        <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
+        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
             {/* Left side - Logo and Navigation */}
             <div className="flex items-center gap-6">
@@ -242,7 +242,7 @@ export function Navigation() {
       <motion.nav 
         role="navigation"
         aria-label="Mobile"
-        className="md:hidden fixed top-4 left-4 right-4 z-50"
+        className="md:hidden fixed top-4 left-0 right-0 z-50 px-6"
         initial={prefersReducedMotion ? false : { y: 0, opacity: 1 }}
         animate={prefersReducedMotion ? {} : { 
           y: isVisible ? 0 : -100,
@@ -253,7 +253,7 @@ export function Navigation() {
           ease: "easeInOut"
         }}
       >
-        <div className="bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
+        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
           <div className="flex items-center justify-between">
             <button 
               onClick={triggerConfetti}

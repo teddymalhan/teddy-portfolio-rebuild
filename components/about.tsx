@@ -5,8 +5,8 @@ import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
 
 export function About() {
   return (
-    <section id="about" className="py-24 px-6">
-      <div className="relative mx-auto max-w-3xl">
+    <section id="about" className="py-24">
+      <div className="relative mx-auto max-w-6xl px-6">
         {/* Ambient glow (no card) */}
         <div className="pointer-events-none absolute -inset-x-12 -top-8 -bottom-8 opacity-60">
           <div className="mx-auto h-full max-w-3xl rounded-[28px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent blur-2xl" />
