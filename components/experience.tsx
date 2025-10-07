@@ -101,56 +101,58 @@ export function Experience() {
                     </p>
                   </div>
                   
-                  {/* Tags */}
+                  {/* Badge (emoji + team) inspired by outlined pill */}
                   {experience.tags && experience.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 pt-2">
-                      {experience.tags.map((tag: string) => (
-                        <div
-                          key={tag}
-                          className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-background border border-border/50 text-foreground/80 text-[13px] font-medium tracking-tight shadow-sm hover:bg-accent/50 hover:border-border transition-colors"
-                        >
-                          {tag}
-                        </div>
-                      ))}
+                      {experience.tags.map((tag: string) => {
+                        const emojiMatch = tag.match(/^[\p{Emoji}\p{Extended_Pictographic}]/u)
+                        const emoji = emojiMatch?.[0]
+                        const text = emoji ? tag.replace(emoji, "").trim() : tag
+                        return (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="h-9 gap-1.5 px-3 rounded-full border-border/60 text-foreground/85 bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/40"
+                          >
+                            {emoji && <span className="text-[15px] leading-none">{emoji}</span>}
+                            <span className="text-[13.5px] leading-none font-medium tracking-tight">{text}</span>
+                          </Badge>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
 
                 {/* Logo */}
-                <div 
-                  className={`relative w-16 h-16 flex items-center justify-center flex-shrink-0 overflow-hidden
-                    ${experience.logoStyle === 'circular' 
-                      ? 'rounded-full bg-white dark:bg-white border-2 border-border/20' 
-                      : experience.logoStyle === 'padded'
-                      ? 'rounded-2xl border-2 p-2.5'
-                      : 'rounded-xl bg-background border border-border/30'
-                    } shadow-sm`}
-                  style={experience.logoStyle === 'padded' && experience.company === 'Electronic Arts'
-                    ? { backgroundColor: 'rgb(54, 89, 241)', borderColor: 'rgb(54, 89, 241)' }
-                    : experience.logoStyle === 'padded' && experience.company === 'SFU Blueprint' 
-                    ? { backgroundColor: 'rgb(32, 119, 227)', borderColor: 'rgb(32, 119, 227)' } 
-                    : experience.logoStyle === 'padded' && experience.company === 'Develop for Good'
-                    ? { backgroundColor: 'rgb(13, 12, 68)', borderColor: 'rgb(235, 62, 105)' }
-                    : experience.logoStyle === 'padded'
-                    ? { backgroundColor: 'white', borderColor: 'rgba(0,0,0,0.1)' }
-                    : undefined}
-                >
-                  <div className={`relative ${experience.logoStyle === 'padded' ? 'w-full h-full' : 'w-full h-full'}`}>
-                    <Image 
-                      src={experience.logo}
-                      alt={`${experience.company} logo`}
-                      fill
-                      className={
-                        experience.company === 'Electronic Arts'
-                          ? 'object-cover scale-185'
-                          : experience.company === 'Develop for Good'
-                          ? 'object-cover scale-180'
-                          : experience.logoStyle === 'circular' 
-                          ? 'object-cover' 
-                          : 'object-contain'
-                      }
-                      unoptimized
-                    />
+                <div className="flex-shrink-0">
+                  <div className="p-[2px] rounded-2xl bg-[linear-gradient(135deg,hsl(var(--ring))_0%,transparent_40%,transparent_60%,hsl(var(--ring))_100%)]">
+                    <div 
+                      className={`relative w-16 h-16 flex items-center justify-center overflow-hidden bg-background/80 border border-border/40 shadow-sm
+                        ${experience.logoStyle === 'circular' 
+                          ? 'rounded-full' 
+                          : experience.logoStyle === 'padded'
+                          ? 'rounded-2xl p-2.5'
+                          : 'rounded-xl'
+                        }`}
+                    >
+                      <div className={`relative w-full h-full`}>
+                        <Image 
+                          src={experience.logo}
+                          alt={`${experience.company} logo`}
+                          fill
+                          className={
+                            experience.company === 'Electronic Arts'
+                              ? 'object-cover scale-185'
+                              : experience.company === 'Develop for Good'
+                              ? 'object-cover scale-180'
+                              : experience.logoStyle === 'circular' 
+                              ? 'object-cover' 
+                              : 'object-contain'
+                          }
+                          unoptimized
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

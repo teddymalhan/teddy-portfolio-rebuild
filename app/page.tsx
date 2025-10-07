@@ -49,9 +49,9 @@ export default function Home() {
 
             {/* Content */}
             <div className="relative">
-              {/* <About /> */}
               <Experience />
               <ProjectsBento />
+              <About />
               <Contact />
             </div>
           </div>
