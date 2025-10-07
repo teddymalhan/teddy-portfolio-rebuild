@@ -142,7 +142,7 @@ export function Hero() {
             onClick={() => window.open("https://linkedin.com/in/teddymalhan", "_blank")}
             className="hover:text-primary"
           >
-            <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5" />
+            <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5 text-foreground" />
           </Button>
           <Button
             variant="ghost"
@@ -150,7 +150,7 @@ export function Hero() {
             onClick={() => window.open("https://github.com/teddymalhan", "_blank")}
             className="hover:text-primary"
           >
-            <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
+            <FontAwesomeIcon icon={faGithub} className="w-5 h-5 text-foreground" />
           </Button>
         </div>
       </div>

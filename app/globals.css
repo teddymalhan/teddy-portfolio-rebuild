@@ -136,20 +136,16 @@
   html {
     scroll-behavior: smooth;
   }
-
-  * {
-    @apply border-border outline-ring/50;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
-
-
+  
   body {
-    @apply bg-background text-foreground;
-    margin: 0;
+    /* Prevent Safari from allowing the entire page to scroll when navigation is fixed */
+    position: relative;
+  }
+  
+  /* Ensure fixed navigation stays in place in Safari */
+  .fixed {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
 

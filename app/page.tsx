@@ -19,7 +19,7 @@ export default function Home() {
 
       <div className="relative z-10">
         <Navigation />
-        <main>
+        <main className="pt-20 md:pt-24">
           <Hero />
           <div className="relative bg-background">
             <Experience />
