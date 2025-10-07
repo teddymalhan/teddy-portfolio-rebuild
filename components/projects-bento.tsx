@@ -112,7 +112,7 @@ const projects = [
 
 export function ProjectsBento() {
   return (
-    <section id="projects" className="min-h-screen py-20">
+    <section id="projects" className="min-h-screen pt-20 pb-8">
       <div className="max-w-6xl mx-auto px-6">
         <div className="mb-8">
           <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-left text-foreground">
