@@ -185,7 +185,7 @@ export function Navigation() {
           ease: "easeInOut"
         }}
       >
-        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
+        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl rounded-full border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10">
           <div className="flex items-center justify-between">
             {/* Left side - Logo and Navigation */}
             <div className="flex items-center gap-6">
@@ -253,7 +253,7 @@ export function Navigation() {
           ease: "easeInOut"
         }}
       >
-        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 backdrop-blur-xl rounded-full border border-border/50 px-6 py-3 shadow-lg">
+        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl rounded-full border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10">
           <div className="flex items-center justify-between">
             <button 
               onClick={triggerConfetti}

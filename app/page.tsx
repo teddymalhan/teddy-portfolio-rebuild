@@ -20,7 +20,7 @@ export default function Home() {
 
       <div className="relative z-10">
         <Navigation />
-        <main className="pt-20 md:pt-24">
+        <main>
           <Hero />
           <div className="relative bg-background">
             <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
