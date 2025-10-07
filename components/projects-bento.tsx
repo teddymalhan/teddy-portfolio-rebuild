@@ -59,6 +59,31 @@ const projects = [
     ),
   },
   {
+    name: "Kaeru",
+    title: "Kaeru",
+    period: "2024",
+    description: "An innovative AI-powered platform that revolutionizes how users interact with technology through advanced machine learning and intuitive design.",
+    className: "col-span-3 lg:col-span-3",
+    href: "https://github.com/teddymalhan/kaeru",
+    cta: "Learn More",
+    technologies: ["React", "TypeScript", "Python", "TensorFlow", "Node.js", "MongoDB"],
+    github: "https://github.com/teddymalhan/kaeru",
+    demo: "https://github.com/teddymalhan/kaeru",
+    featured: true,
+    background: (
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/kaeru.png"
+            alt="Kaeru"
+            fill
+            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
     name: "GradGains",
     title: "GradGains",
     period: "2024",
