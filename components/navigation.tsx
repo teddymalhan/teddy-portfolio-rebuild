@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Menu, X, Search, Home, Hammer, Briefcase, Mail, FileText, Github, Linkedin } from "lucide-react"
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import {
@@ -25,14 +24,13 @@ const navItems = [
 
 export function Navigation() {
   const [activeSection, setActiveSection] = useState("")
-  const [isAtHero, setIsAtHero] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [showConfetti, setShowConfetti] = useState(false)
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 })
   const [commandOpen, setCommandOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const conductorRef = useRef<any>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,13 +42,10 @@ export function Navigation() {
       
       setLastScrollY(scrollPosition)
       
-      // Check if we're at the hero section (top of the page)
+      // If near top, mark home as active
       if (scrollPosition < windowHeight / 2) {
-        setIsAtHero(true)
         setActiveSection("home")
         return
-      } else {
-        setIsAtHero(false)
       }
 
       // Check which section we're currently in
@@ -107,6 +102,18 @@ export function Navigation() {
     }
   }, [])
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isMobileMenuOpen])
+
   const scrollToSection = (href: string) => {
     const sectionId = href.slice(1)
     const element = document.getElementById(sectionId)
@@ -147,6 +154,10 @@ export function Navigation() {
         e.preventDefault()
         setCommandOpen((open) => !open)
       }
+      if (e.key === "Escape") {
+        setIsMobileMenuOpen(false)
+        setCommandOpen(false)
+      }
     }
     document.addEventListener("keydown", down)
     return () => document.removeEventListener("keydown", down)
@@ -161,13 +172,15 @@ export function Navigation() {
     <>
       {/* Desktop Navigation */}
       <motion.nav 
+        role="navigation"
+        aria-label="Primary"
         className="hidden md:block fixed top-4 left-4 right-4 z-50"
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ 
+        initial={prefersReducedMotion ? false : { y: 0, opacity: 1 }}
+        animate={prefersReducedMotion ? {} : { 
           y: isVisible ? 0 : -100,
           opacity: isVisible ? 1 : 0
         }}
-        transition={{ 
+        transition={prefersReducedMotion ? undefined : { 
           duration: 0.3,
           ease: "easeInOut"
         }}
@@ -184,7 +197,7 @@ export function Navigation() {
                 🧸
               </button>
 
-              <div className="flex space-x-1">
+              <div className="flex space-x-1" role="menubar" aria-label="Sections">
                 {navItems.map((item) => (
                   <motion.button
                     key={item.name}
@@ -194,6 +207,8 @@ export function Navigation() {
                         ? "text-primary bg-primary/10" 
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     }`}
+                    aria-current={activeSection === item.href.slice(1) ? "page" : undefined}
+                    aria-label={`Go to ${item.name}`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -225,13 +240,15 @@ export function Navigation() {
 
       {/* Mobile Navigation */}
       <motion.nav 
+        role="navigation"
+        aria-label="Mobile"
         className="md:hidden fixed top-4 left-4 right-4 z-50"
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ 
+        initial={prefersReducedMotion ? false : { y: 0, opacity: 1 }}
+        animate={prefersReducedMotion ? {} : { 
           y: isVisible ? 0 : -100,
           opacity: isVisible ? 1 : 0
         }}
-        transition={{ 
+        transition={prefersReducedMotion ? undefined : { 
           duration: 0.3,
           ease: "easeInOut"
         }}
@@ -251,6 +268,9 @@ export function Navigation() {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 rounded-full text-foreground hover:text-primary hover:bg-accent/20 transition-all duration-200"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
@@ -268,9 +288,10 @@ export function Navigation() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
             className="md:hidden fixed inset-0 z-40 bg-gradient-to-br from-background/95 via-background/90 to-card/95 backdrop-blur-xl"
-            style={{ paddingTop: '100px' }} // Account for pill nav bar height
+            style={{ paddingTop: '100px' }}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
-            <div className="flex flex-col items-center justify-center h-full space-y-6 px-8">
+            <div id="mobile-menu" className="flex flex-col items-center justify-center h-full space-y-6 px-8" onClick={(e) => e.stopPropagation()}>
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.name}
@@ -279,6 +300,7 @@ export function Navigation() {
                   transition={{ delay: index * 0.1 + 0.1 }}
                   onClick={() => scrollToSection(item.href)}
                   className="flex items-center gap-4 text-xl font-medium text-foreground hover:text-primary transition-colors py-4 px-6 rounded-2xl hover:bg-accent/10 w-full max-w-xs justify-center"
+                  aria-label={`Go to ${item.name}`}
                 >
                   <span className="text-2xl">{item.emoji}</span>
                   <span>{item.name}</span>
