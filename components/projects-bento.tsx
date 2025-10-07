@@ -114,9 +114,9 @@ export function ProjectsBento() {
   return (
     <section id="projects" className="min-h-screen py-20 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text mb-6">
-            projects 🛠️
+        <div className="mb-12 lg:mb-20">
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-center">
+            Projects 🛠️
           </h2>
         </div>
 

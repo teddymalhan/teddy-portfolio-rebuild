@@ -68,7 +68,7 @@ export function Experience() {
     <div id="experience" className="min-h-screen">
       <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20">
         {/* Header */}
-        <h1 className="text-4xl lg:text-5xl font-bold mb-20 tracking-tight">
+        <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-center mb-12 lg:mb-20">
             Experience 🎉
         </h1>
 
