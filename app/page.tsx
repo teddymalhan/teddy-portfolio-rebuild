@@ -9,6 +9,7 @@ import { AnimatedBackground } from "@/components/animated-background"
 import { FloatingElements } from "@/components/floating-elements"
 import { TechMascots } from "@/components/tech-mascots"
 import Footer from "@/components/footer"
+import { Separator } from "@/components/ui/separator"
 
 export default function Home() {
   return (
@@ -22,9 +23,13 @@ export default function Home() {
         <main className="pt-20 md:pt-24">
           <Hero />
           <div className="relative bg-background">
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             <Experience />
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             <ProjectsBento />
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             <About />
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             <Footer />
           </div>
         </main>
