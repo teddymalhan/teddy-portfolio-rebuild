@@ -92,7 +92,7 @@ export function Hero() {
             </h1>
 
           <h2 className="text-xl md:text-2xl mb-6 font-medium text-[#575757] dark:text-white">
-            <TextHighlighter highlightColor="rgb(212, 40, 55)" className="text-white px-2 py-1 rounded font-bold">third year cs</TextHighlighter> student @{" "}
+            cs major @{" "}
             <span className="inline-flex items-center gap-1">
               <img 
                 src="https://praxis.encommun.io/media/notes/note_12478/sfu.jpg" 
@@ -101,6 +101,7 @@ export function Hero() {
               />
               <TextHighlighter highlightColor="rgb(212, 40, 55)" className="text-white px-2 py-1 rounded font-bold">simon fraser university</TextHighlighter>
             </span>
+            , graduating <TextHighlighter highlightColor="rgb(16, 185, 129)" className="text-white px-2 py-1 rounded font-bold">2027</TextHighlighter>
           </h2>
 
           <h2 className="text-xl md:text-2xl mb-6 font-medium text-[#575757] dark:text-white">
