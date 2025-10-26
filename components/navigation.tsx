@@ -51,7 +51,7 @@ export function Navigation() {
       
       // Binary state: either fully up (0) or fully down (1) - no partial states
       let rawProgress = (scrollPosition - morphStart) / morphEnd
-      const wasMorphed = rawProgress >= 0.5
+      let wasMorphed = rawProgress >= 0.5
       
       if (wasMorphed !== isMorphed) {
         setIsMorphed(wasMorphed)
@@ -97,7 +97,7 @@ export function Navigation() {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleScroll)
     }
-  }, [lastScrollY])
+  }, [lastScrollY, isMorphed])
 
   useEffect(() => {
     const updateCanvasDimensions = () => {
@@ -208,29 +208,15 @@ export function Navigation() {
           paddingRight: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
         }}
       >
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={isMorphed ? "morphed" : "full"}
-            className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
-            initial={{ y: isMorphed ? -600 : 0, opacity: 0 }}
-            animate={{
-              borderRadius: prefersReducedMotion ? "9999px" : isMorphed ? "9999px" : "0px",
-              y: 0,
-              opacity: 1,
-            }}
-            exit={{ y: -600, opacity: 0 }}
-            style={{
-              maxWidth: prefersReducedMotion ? "1152px" : isMorphed ? "1152px" : "100%",
-              marginLeft: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
-              marginRight: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 1200,
-              damping: 60,
-              mass: 0.1
-            }}
-          >
+        <div 
+          className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
+          style={{
+            borderRadius: prefersReducedMotion ? "9999px" : isMorphed ? "9999px" : "0px",
+            maxWidth: prefersReducedMotion ? "1152px" : isMorphed ? "1152px" : "100%",
+            marginLeft: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
+            marginRight: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
+          }}
+        >
           <div className="flex items-center justify-between">
             {/* Left side - Logo and Navigation */}
             <div className="flex items-center gap-6">
@@ -280,8 +266,7 @@ export function Navigation() {
               <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
             </div>
           </div>
-          </motion.div>
-        </AnimatePresence>
+        </div>
       </motion.nav>
 
       {/* Mobile Navigation */}
