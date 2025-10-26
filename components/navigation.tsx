@@ -226,9 +226,9 @@ export function Navigation() {
             }}
             transition={{
               type: "spring",
-              stiffness: 400,
-              damping: 35,
-              mass: 0.5
+              stiffness: 1200,
+              damping: 60,
+              mass: 0.1
             }}
           >
           <div className="flex items-center justify-between">
