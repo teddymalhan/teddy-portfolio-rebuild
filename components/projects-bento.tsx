@@ -115,11 +115,11 @@ const projects = [
     period: "2024",
     description: "A smart Git commit assistant that analyzes code changes and generates meaningful, conventional commit messages using AI.",
     className: "col-span-3 lg:col-span-2",
-    href: "https://github.com/teddymalhan/CommitWise",
-    cta: "View Project",
+    href: "https://commitwise.malhan.ca",
+    cta: "Demo",
     technologies: ["TypeScript", "Node.js", "OpenAI", "Git"],
     github: "https://github.com/teddymalhan/CommitWise",
-    demo: "#",
+    demo: "https://commitwise.malhan.ca",
     background: (
       <div className="absolute inset-0">
         <div className="absolute inset-0 overflow-hidden">
