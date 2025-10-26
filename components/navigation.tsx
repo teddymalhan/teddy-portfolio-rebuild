@@ -30,6 +30,7 @@ export function Navigation() {
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [isMorphed, setIsMorphed] = useState(false)
   const conductorRef = useRef<any>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -46,14 +47,17 @@ export function Navigation() {
       // Calculate scroll progress with smooth easing and edge case handling
       const heroHeight = windowHeight
       const morphStart = 0
-      const morphEnd = heroHeight * 0.8 // Complete transformation over 80% of hero
+      const morphEnd = heroHeight * 0.25 // 25% threshold
       
-      // Smooth interpolation with easing
+      // Binary state: either fully up (0) or fully down (1) - no partial states
       let rawProgress = (scrollPosition - morphStart) / morphEnd
-      rawProgress = Math.max(0, Math.min(1, rawProgress))
+      const wasMorphed = rawProgress >= 0.5
       
-      // Apply easing for smoother feel (ease-out cubic)
-      const progress = rawProgress === 1 ? 1 : 1 - Math.pow(1 - rawProgress, 3)
+      if (wasMorphed !== isMorphed) {
+        setIsMorphed(wasMorphed)
+      }
+      
+      const progress = wasMorphed ? 1 : 0
       setScrollProgress(progress)
       
       // If near top, mark home as active
@@ -204,25 +208,29 @@ export function Navigation() {
           paddingRight: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
         }}
       >
-        <motion.div 
-          className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
-          animate={{
-            borderRadius: prefersReducedMotion ? "9999px" : scrollProgress > 0.25 ? "9999px" : "0px",
-            y: prefersReducedMotion ? 0 : scrollProgress > 0.25 ? 0 : -(scrollProgress / 0.25) * 600,
-            opacity: prefersReducedMotion ? 1 : scrollProgress > 0.25 ? 1 : 1 - (scrollProgress / 0.25),
-          }}
-          style={{
-            maxWidth: prefersReducedMotion ? "1152px" : scrollProgress > 0.25 ? "1152px" : "100%",
-            marginLeft: prefersReducedMotion ? "auto" : scrollProgress > 0.25 ? "auto" : "0",
-            marginRight: prefersReducedMotion ? "auto" : scrollProgress > 0.25 ? "auto" : "0",
-          }}
-          transition={{
-            type: "spring",
-            stiffness: scrollProgress < 0.35 ? 600 : 800,
-            damping: scrollProgress < 0.35 ? 30 : 40,
-            mass: 0.25
-          }}
-        >
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={isMorphed ? "morphed" : "full"}
+            className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
+            initial={{ y: isMorphed ? -600 : 0, opacity: 0 }}
+            animate={{
+              borderRadius: prefersReducedMotion ? "9999px" : isMorphed ? "9999px" : "0px",
+              y: 0,
+              opacity: 1,
+            }}
+            exit={{ y: -600, opacity: 0 }}
+            style={{
+              maxWidth: prefersReducedMotion ? "1152px" : isMorphed ? "1152px" : "100%",
+              marginLeft: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
+              marginRight: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 35,
+              mass: 0.5
+            }}
+          >
           <div className="flex items-center justify-between">
             {/* Left side - Logo and Navigation */}
             <div className="flex items-center gap-6">
@@ -272,7 +280,8 @@ export function Navigation() {
               <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
             </div>
           </div>
-        </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </motion.nav>
 
       {/* Mobile Navigation */}
