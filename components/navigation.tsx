@@ -43,10 +43,17 @@ export function Navigation() {
       
       setLastScrollY(scrollPosition)
       
-      // Calculate scroll progress based on 20% of hero section
+      // Calculate scroll progress with smooth easing and edge case handling
       const heroHeight = windowHeight
-      const morphTrigger = heroHeight * 0.2
-      const progress = Math.min(1, scrollPosition / morphTrigger)
+      const morphStart = 0
+      const morphEnd = heroHeight * 0.8 // Complete transformation over 80% of hero
+      
+      // Smooth interpolation with easing
+      let rawProgress = (scrollPosition - morphStart) / morphEnd
+      rawProgress = Math.max(0, Math.min(1, rawProgress))
+      
+      // Apply easing for smoother feel (ease-out cubic)
+      const progress = rawProgress === 1 ? 1 : 1 - Math.pow(1 - rawProgress, 3)
       setScrollProgress(progress)
       
       // If near top, mark home as active
@@ -182,28 +189,38 @@ export function Navigation() {
         role="navigation"
         aria-label="Primary"
         className="hidden md:block fixed left-0 right-0 z-50"
+        initial={prefersReducedMotion ? false : { opacity: 1 }}
+        animate={prefersReducedMotion ? {} : { 
+          opacity: isVisible ? 1 : 0,
+          y: isVisible ? 0 : -20
+        }}
+        transition={prefersReducedMotion ? undefined : { 
+          duration: 0.4,
+          ease: [0.22, 1, 0.36, 1]
+        }}
         style={{
           top: prefersReducedMotion ? "1rem" : `${scrollProgress}rem`,
           paddingLeft: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
           paddingRight: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
         }}
-        initial={prefersReducedMotion ? false : { opacity: 1 }}
-        animate={prefersReducedMotion ? {} : { 
-          opacity: isVisible ? 1 : 0
-        }}
-        transition={prefersReducedMotion ? undefined : { 
-          duration: 0.3,
-          ease: "easeInOut"
-        }}
       >
         <motion.div 
           className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
+          animate={{
+            borderRadius: prefersReducedMotion ? "9999px" : scrollProgress > 0.25 ? "9999px" : "0px",
+            y: prefersReducedMotion ? 0 : scrollProgress > 0.25 ? 0 : -(scrollProgress / 0.25) * 600,
+            opacity: prefersReducedMotion ? 1 : scrollProgress > 0.25 ? 1 : 1 - (scrollProgress / 0.25),
+          }}
           style={{
-            borderRadius: prefersReducedMotion ? "9999px" : scrollProgress === 0 ? "0px" : `${Math.pow(scrollProgress, 0.7) * 9999}px`,
-            maxWidth: prefersReducedMotion ? "1152px" : scrollProgress > 0.95 ? "1152px" : "100%",
-            marginLeft: prefersReducedMotion ? "auto" : scrollProgress > 0.95 ? "auto" : "0",
-            marginRight: prefersReducedMotion ? "auto" : scrollProgress > 0.95 ? "auto" : "0",
-            transition: "border-radius 0.2s ease-out"
+            maxWidth: prefersReducedMotion ? "1152px" : scrollProgress > 0.25 ? "1152px" : "100%",
+            marginLeft: prefersReducedMotion ? "auto" : scrollProgress > 0.25 ? "auto" : "0",
+            marginRight: prefersReducedMotion ? "auto" : scrollProgress > 0.25 ? "auto" : "0",
+          }}
+          transition={{
+            type: "spring",
+            stiffness: scrollProgress < 0.35 ? 600 : 800,
+            damping: scrollProgress < 0.35 ? 30 : 40,
+            mass: 0.25
           }}
         >
           <div className="flex items-center justify-between">
