@@ -29,6 +29,7 @@ export function Navigation() {
   const [commandOpen, setCommandOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const conductorRef = useRef<any>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -41,6 +42,12 @@ export function Navigation() {
       setIsVisible(true)
       
       setLastScrollY(scrollPosition)
+      
+      // Calculate scroll progress based on 20% of hero section
+      const heroHeight = windowHeight
+      const morphTrigger = heroHeight * 0.2
+      const progress = Math.min(1, scrollPosition / morphTrigger)
+      setScrollProgress(progress)
       
       // If near top, mark home as active
       if (scrollPosition < windowHeight / 2) {
@@ -174,10 +181,14 @@ export function Navigation() {
       <motion.nav 
         role="navigation"
         aria-label="Primary"
-        className="hidden md:block fixed top-4 left-0 right-0 z-50 px-6"
-        initial={prefersReducedMotion ? false : { y: 0, opacity: 1 }}
+        className="hidden md:block fixed left-0 right-0 z-50"
+        style={{
+          top: prefersReducedMotion ? "1rem" : `${scrollProgress}rem`,
+          paddingLeft: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
+          paddingRight: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
+        }}
+        initial={prefersReducedMotion ? false : { opacity: 1 }}
         animate={prefersReducedMotion ? {} : { 
-          y: isVisible ? 0 : -100,
           opacity: isVisible ? 1 : 0
         }}
         transition={prefersReducedMotion ? undefined : { 
@@ -185,7 +196,16 @@ export function Navigation() {
           ease: "easeInOut"
         }}
       >
-        <div className="max-w-6xl mx-auto bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl rounded-full border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10">
+        <motion.div 
+          className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
+          style={{
+            borderRadius: prefersReducedMotion ? "9999px" : scrollProgress === 0 ? "0px" : `${Math.pow(scrollProgress, 0.7) * 9999}px`,
+            maxWidth: prefersReducedMotion ? "1152px" : scrollProgress > 0.95 ? "1152px" : "100%",
+            marginLeft: prefersReducedMotion ? "auto" : scrollProgress > 0.95 ? "auto" : "0",
+            marginRight: prefersReducedMotion ? "auto" : scrollProgress > 0.95 ? "auto" : "0",
+            transition: "border-radius 0.2s ease-out"
+          }}
+        >
           <div className="flex items-center justify-between">
             {/* Left side - Logo and Navigation */}
             <div className="flex items-center gap-6">
@@ -235,7 +255,7 @@ export function Navigation() {
               <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.nav>
 
       {/* Mobile Navigation */}
