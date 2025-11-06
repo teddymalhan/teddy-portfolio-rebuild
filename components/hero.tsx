@@ -47,14 +47,29 @@ export function Hero() {
             transform: translateY(4px) scale(1);
           }
         }
+
+        @keyframes rotateHand {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(20deg);
+          }
+        }
       `}</style>
       <section id="home" className="min-h-screen flex items-center justify-center relative">
         <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
         <div className="mb-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 text-balance">
-            <span className="relative inline-block pb-6">
-              hi! i'm teddy! 👋
-              <svg 
+          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-2 text-balance">
+            <span className="relative inline-block pb-2">
+              hi! i'm teddy! <span 
+                style={{
+                  display: 'inline-block',
+                  animation: 'rotateHand 1s linear(0, 0.315 10.5%, 0.502 18.4%, 0.567 22.2%, 0.613 25.9%, 0.64 29.6%, 0.65 33.3%, 0.628 39.2%, 0.563 45.6%, 0.202 67.6%, 0.082 77.1%, 0.041 82.1%, 0.016 87.2%, 0.003 92.7%, 0) forwards',
+                  transformOrigin: '70% 70%'
+                }}
+              >👋</span>
+              {/* <svg 
                 className="absolute bottom-0 left-0 w-full h-8 overflow-visible" 
                 viewBox="0 0 438.6328125 70.77084350585938"
                 preserveAspectRatio="none"
@@ -85,7 +100,7 @@ export function Hero() {
                     <feGaussianBlur stdDeviation="0.3" result="blur"/>
                   </filter>
                 </defs>
-              </svg>
+              </svg> */}
               </span>
             
             
