@@ -200,12 +200,13 @@ export function Navigation() {
         }}
         transition={prefersReducedMotion ? undefined : { 
           duration: 0.4,
-          ease: [0.22, 1, 0.36, 1]
+          ease: [0.5, 1, 0.89, 1]
         }}
         style={{
           top: prefersReducedMotion ? "1rem" : `${scrollProgress}rem`,
           paddingLeft: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
           paddingRight: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
+          transition: prefersReducedMotion ? undefined : "top 0.4s cubic-bezier(0.5, 1, 0.89, 1), padding-left 0.4s cubic-bezier(0.5, 1, 0.89, 1), padding-right 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
         }}
       >
         <div 
@@ -215,6 +216,7 @@ export function Navigation() {
             maxWidth: prefersReducedMotion ? "1152px" : isMorphed ? "1152px" : "100%",
             marginLeft: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
             marginRight: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
+            transition: prefersReducedMotion ? undefined : "border-radius 0.4s cubic-bezier(0.5, 1, 0.89, 1), max-width 0.4s cubic-bezier(0.5, 1, 0.89, 1), margin-left 0.4s cubic-bezier(0.5, 1, 0.89, 1), margin-right 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
           }}
         >
           <div className="flex items-center justify-between">
