@@ -51,6 +51,9 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
       Math.max(top, window.innerHeight - top)
     )
 
+    const easing = "cubic-bezier(0.5, 1, 0.89, 1)"
+    
+    // Animate the new view (expanding circle)
     document.documentElement.animate(
       {
         clipPath: [
@@ -60,8 +63,23 @@ export const AnimatedThemeToggler = ({ className }: Props) => {
       },
       {
         duration: 700,
-        easing: "cubic-bezier(0.5, 1, 0.89, 1)",
+        easing,
         pseudoElement: "::view-transition-new(root)",
+      }
+    )
+
+    // Animate the old view (contracting circle) - reverse animation
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(${maxRadius}px at ${x}px ${y}px)`,
+          `circle(0px at ${x}px ${y}px)`,
+        ],
+      },
+      {
+        duration: 700,
+        easing,
+        pseudoElement: "::view-transition-old(root)",
       }
     )
   }, [isDark])
