@@ -132,6 +132,48 @@ export function Navigation() {
     }
   }, [isMobileMenuOpen])
 
+  // Cubic bezier easing function for smooth scrolling
+  // Evaluates cubic-bezier(0.5, 1, 0.89, 1) at progress t (0 to 1)
+  const cubicBezierEase = (t: number): number => {
+    // Cubic bezier control points: (0.5, 1, 0.89, 1)
+    // P0 = (0, 0), P1 = (0.5, 1), P2 = (0.89, 1), P3 = (1, 1)
+    const p1x = 0.5
+    const p1y = 1
+    const p2x = 0.89
+    const p2y = 1
+
+    // Binary search to find the t value that gives us the desired x
+    // We need to find t such that bezier_x(t) = input_t
+    let start = 0
+    let end = 1
+    const targetX = t
+
+    // Binary search for the t parameter that gives us targetX
+    for (let i = 0; i < 14; i++) {
+      const mid = (start + end) / 2
+      // Evaluate bezier x at mid: Bx(t) = 3(1-t)²t*p1x + 3(1-t)t²*p2x + t³
+      const oneMinusT = 1 - mid
+      const bezierX = 3 * oneMinusT * oneMinusT * mid * p1x + 
+                      3 * oneMinusT * mid * mid * p2x + 
+                      mid * mid * mid
+
+      if (bezierX < targetX) {
+        start = mid
+      } else {
+        end = mid
+      }
+    }
+
+    // Now evaluate bezier y at the found t
+    const tParam = (start + end) / 2
+    const oneMinusT = 1 - tParam
+    const bezierY = 3 * oneMinusT * oneMinusT * tParam * p1y + 
+                    3 * oneMinusT * tParam * tParam * p2y + 
+                    tParam * tParam * tParam
+
+    return bezierY
+  }
+
   const scrollToSection = (href: string) => {
     const sectionId = href.slice(1)
     const element = document.getElementById(sectionId)
@@ -146,12 +188,38 @@ export function Navigation() {
       const offset = isMobile ? 0 : navBarHeight + additionalOffset
       
       // Use getBoundingClientRect for accurate positioning with complex layouts
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - offset
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: "smooth"
-      })
+      const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset
+      const startPosition = window.pageYOffset
+      const distance = targetPosition - startPosition
+      const duration = 180 // milliseconds
+      let startTime: number | null = null
+
+      // Custom scroll animation with cubic-bezier easing
+      const animateScroll = (currentTime: number) => {
+        startTime ??= currentTime
+        const elapsed = currentTime - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        
+        // Apply cubic-bezier easing: cubic-bezier(0.5, 1, 0.89, 1)
+        const easedProgress = cubicBezierEase(progress)
+        
+        const currentPosition = startPosition + distance * easedProgress
+        window.scrollTo(0, currentPosition)
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll)
+        }
+      }
+
+      if (prefersReducedMotion) {
+        // Fallback to instant scroll for reduced motion preference
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "auto"
+        })
+      } else {
+        requestAnimationFrame(animateScroll)
+      }
     }
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
   }
