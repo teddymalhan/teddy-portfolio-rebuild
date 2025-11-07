@@ -16,8 +16,8 @@ interface Mascot {
 
 // Generate random curved paths for mascots
 const generateRandomPath = () => {
-  const width = typeof window !== 'undefined' ? window.innerWidth : 1200
-  const height = typeof window !== 'undefined' ? window.innerHeight : 800
+  const width = globalThis.window === undefined ? 1200 : globalThis.window.innerWidth
+  const height = globalThis.window === undefined ? 800 : globalThis.window.innerHeight
   
   // Generate different types of paths for variety
   const pathType = Math.random()

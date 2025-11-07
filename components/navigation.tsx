@@ -54,34 +54,34 @@ export function Navigation() {
       let rawProgress = (scrollPosition - morphStart) / morphEnd
       let wasMorphed = rawProgress >= 0.5
       
-      if (wasMorphed !== isMorphed) {
-        if (prefersReducedMotion) {
-          // Skip fade animation for reduced motion
+      // Only update if state has changed
+      if (wasMorphed === isMorphed) {
+        // State unchanged, skip update
+      } else if (prefersReducedMotion) {
+        // State has changed, handle update with reduced motion
+        // Skip fade animation for reduced motion
+        setIsMorphed(wasMorphed)
+        const progress = wasMorphed ? 1 : 0
+        setScrollProgress(progress)
+        setIsNavContentVisible(true)
+      } else {
+        // State has changed, handle update with full animation
+        // Fade out all navigation content first
+        setIsNavContentVisible(false)
+        // Wait for fade out to complete, then update position
+        setTimeout(() => {
           setIsMorphed(wasMorphed)
           const progress = wasMorphed ? 1 : 0
           setScrollProgress(progress)
-          setIsNavContentVisible(true)
-        } else {
-          // Fade out all navigation content first
-          setIsNavContentVisible(false)
-          // Wait for fade out to complete, then update position
+          // Wait for morph transition to complete, then fade back in
           setTimeout(() => {
-            setIsMorphed(wasMorphed)
-            const progress = wasMorphed ? 1 : 0
-            setScrollProgress(progress)
-            // Wait for morph transition to complete, then fade back in
-            setTimeout(() => {
+            requestAnimationFrame(() => {
               requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  setIsNavContentVisible(true)
-                })
+                setIsNavContentVisible(true)
               })
-            }, 200) // Wait for morph transition (0.2s) to complete
-          }, 100) // Fade out duration
-        }
-      } else {
-        const progress = wasMorphed ? 1 : 0
-        setScrollProgress(progress)
+            })
+          }, 200) // Wait for morph transition (0.2s) to complete
+        }, 100) // Fade out duration
       }
       
       // If near top, mark home as active
@@ -114,11 +114,11 @@ export function Navigation() {
       }
     }
 
-    window.addEventListener("scroll", handleScroll)
+    globalThis.window.addEventListener("scroll", handleScroll)
     window.addEventListener("resize", handleScroll) // Re-check on resize
     handleScroll() // Check initial position
     return () => {
-      window.removeEventListener("scroll", handleScroll)
+      globalThis.window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleScroll)
     }
   }, [lastScrollY, isMorphed])
@@ -126,8 +126,8 @@ export function Navigation() {
   useEffect(() => {
     const updateCanvasDimensions = () => {
       setCanvasDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
+        width: globalThis.window.innerWidth,
+        height: globalThis.window.innerHeight
       })
     }
 
@@ -135,12 +135,12 @@ export function Navigation() {
     updateCanvasDimensions()
 
     // Update on resize
-    window.addEventListener('resize', updateCanvasDimensions)
-    window.addEventListener('orientationchange', updateCanvasDimensions)
+    globalThis.window.addEventListener('resize', updateCanvasDimensions)
+    globalThis.window.addEventListener('orientationchange', updateCanvasDimensions)
     
     return () => {
-      window.removeEventListener('resize', updateCanvasDimensions)
-      window.removeEventListener('orientationchange', updateCanvasDimensions)
+      globalThis.window.removeEventListener('resize', updateCanvasDimensions)
+      globalThis.window.removeEventListener('orientationchange', updateCanvasDimensions)
     }
   }, [])
 
@@ -206,14 +206,14 @@ export function Navigation() {
       setIsVisible(true)
       
       // Add offset for desktop to account for fixed navigation bar
-      const isMobile = window.innerWidth < 768 // md breakpoint
+      const isMobile = globalThis.window.innerWidth < 768 // md breakpoint
       const navBarHeight = 80 // Approximate height of the navigation bar
       const additionalOffset = 20 // Extra pixels for breathing room
       const offset = isMobile ? 0 : navBarHeight + additionalOffset
       
       // Use getBoundingClientRect for accurate positioning with complex layouts
-      const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset
-      const startPosition = window.pageYOffset
+      const targetPosition = element.getBoundingClientRect().top + globalThis.window.pageYOffset - offset
+      const startPosition = globalThis.window.pageYOffset
       const distance = targetPosition - startPosition
       const duration = 180 // milliseconds
       let startTime: number | null = null
@@ -228,7 +228,7 @@ export function Navigation() {
         const easedProgress = cubicBezierEase(progress)
         
         const currentPosition = startPosition + distance * easedProgress
-        window.scrollTo(0, currentPosition)
+        globalThis.window.scrollTo(0, currentPosition)
         
         if (progress < 1) {
           requestAnimationFrame(animateScroll)
@@ -237,12 +237,12 @@ export function Navigation() {
 
       if (prefersReducedMotion) {
         // Fallback to instant scroll for reduced motion preference
-        window.scrollTo({
+        globalThis.window.scrollTo({
           top: targetPosition,
           behavior: "auto"
         })
       } else {
-        requestAnimationFrame(animateScroll)
+        globalThis.requestAnimationFrame(animateScroll)
       }
     }
     setIsMobileMenuOpen(false) // Close mobile menu after navigation
@@ -282,7 +282,7 @@ export function Navigation() {
     <>
       {/* Desktop Navigation */}
       <motion.nav 
-        role="navigation"
+        role="nav"
         aria-label="Primary"
         className="hidden md:block fixed left-0 right-0 z-50"
         initial={prefersReducedMotion ? false : { opacity: 1 }}
@@ -303,14 +303,46 @@ export function Navigation() {
       >
         <div 
           className={`bg-gradient-to-r from-card/90 via-card/80 to-card/90 dark:from-card/95 dark:via-card/90 dark:to-card/95 backdrop-blur-xl border border-border/50 dark:border-border/90 px-6 py-3 shadow-lg dark:shadow-2xl dark:shadow-black/30 shadow-blue-500/10 dark:ring-1 dark:ring-white/10`}
-          style={{
-            borderRadius: prefersReducedMotion ? "9999px" : isMorphed ? "9999px" : "0px",
-            maxWidth: prefersReducedMotion ? "1152px" : isMorphed ? "1152px" : "100%",
-            marginLeft: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
-            marginRight: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
-            minHeight: "60px",
-            transition: prefersReducedMotion ? undefined : "border-radius 0.2s cubic-bezier(0.5, 1, 0.89, 1), max-width 0.2s cubic-bezier(0.5, 1, 0.89, 1), margin-left 0.2s cubic-bezier(0.5, 1, 0.89, 1), margin-right 0.2s cubic-bezier(0.5, 1, 0.89, 1)",
-          }}
+          style={(() => {
+            const shouldUseMorphedStyle = prefersReducedMotion || isMorphed
+            
+            let borderRadius: string
+            if (shouldUseMorphedStyle) {
+              borderRadius = "9999px"
+            } else {
+              borderRadius = "0px"
+            }
+            
+            let maxWidth: string
+            if (shouldUseMorphedStyle) {
+              maxWidth = "1152px"
+            } else {
+              maxWidth = "100%"
+            }
+            
+            let marginLeft: string
+            if (shouldUseMorphedStyle) {
+              marginLeft = "auto"
+            } else {
+              marginLeft = "0"
+            }
+            
+            let marginRight: string
+            if (shouldUseMorphedStyle) {
+              marginRight = "auto"
+            } else {
+              marginRight = "0"
+            }
+            
+            return {
+              borderRadius,
+              maxWidth,
+              marginLeft,
+              marginRight,
+              minHeight: "60px",
+              transition: prefersReducedMotion ? undefined : "border-radius 0.2s cubic-bezier(0.5, 1, 0.89, 1), max-width 0.2s cubic-bezier(0.5, 1, 0.89, 1), margin-left 0.2s cubic-bezier(0.5, 1, 0.89, 1), margin-right 0.2s cubic-bezier(0.5, 1, 0.89, 1)",
+            }
+          })()}
         >
           <div 
             className="flex items-center justify-between"
@@ -423,7 +455,7 @@ export function Navigation() {
 
       {/* Mobile Navigation */}
       <motion.nav 
-        role="navigation"
+        role="nav"
         aria-label="Mobile"
         className="md:hidden fixed top-4 left-0 right-0 z-50 px-6"
         initial={prefersReducedMotion ? false : { y: 0, opacity: 1 }}
@@ -474,7 +506,16 @@ export function Navigation() {
             style={{ paddingTop: '100px' }}
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <div id="mobile-menu" className="flex flex-col items-center justify-center h-full space-y-6 px-8" onClick={(e) => e.stopPropagation()}>
+            <div 
+              id="mobile-menu" 
+              className="flex flex-col items-center justify-center h-full space-y-6 px-8" 
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                e.stopPropagation()
+              }}
+              role="none"
+              tabIndex={-1}
+            >
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.name}

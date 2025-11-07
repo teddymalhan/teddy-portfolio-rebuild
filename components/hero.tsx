@@ -1,12 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import AlgoliaButton from "@/components/ui/algolia-button"
 import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faPhone, faDownload, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 

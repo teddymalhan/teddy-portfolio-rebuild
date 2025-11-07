@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { Badge } from "./ui/badge"
-import { ShinyButton } from "./ui/shiny-button"
 import { TextHighlighter } from "./fancy/text/text-highlighter"
 
 interface ExperienceItem {

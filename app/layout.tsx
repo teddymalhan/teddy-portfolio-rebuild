@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
-import Footer from "@/components/footer"
 
 const inter = Inter({
   subsets: ["latin"],
