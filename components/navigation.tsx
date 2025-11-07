@@ -31,6 +31,7 @@ export function Navigation() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [isMorphed, setIsMorphed] = useState(false)
+  const [isNavContentVisible, setIsNavContentVisible] = useState(true)
   const conductorRef = useRef<any>(null)
   const prefersReducedMotion = useReducedMotion()
 
@@ -54,11 +55,34 @@ export function Navigation() {
       let wasMorphed = rawProgress >= 0.5
       
       if (wasMorphed !== isMorphed) {
-        setIsMorphed(wasMorphed)
+        if (prefersReducedMotion) {
+          // Skip fade animation for reduced motion
+          setIsMorphed(wasMorphed)
+          const progress = wasMorphed ? 1 : 0
+          setScrollProgress(progress)
+          setIsNavContentVisible(true)
+        } else {
+          // Fade out all navigation content first
+          setIsNavContentVisible(false)
+          // Wait for fade out to complete, then update position
+          setTimeout(() => {
+            setIsMorphed(wasMorphed)
+            const progress = wasMorphed ? 1 : 0
+            setScrollProgress(progress)
+            // Wait for morph transition to complete, then fade back in
+            setTimeout(() => {
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  setIsNavContentVisible(true)
+                })
+              })
+            }, 200) // Wait for morph transition (0.2s) to complete
+          }, 100) // Fade out duration
+        }
+      } else {
+        const progress = wasMorphed ? 1 : 0
+        setScrollProgress(progress)
       }
-      
-      const progress = wasMorphed ? 1 : 0
-      setScrollProgress(progress)
       
       // If near top, mark home as active
       if (scrollPosition < windowHeight / 2) {
@@ -267,14 +291,14 @@ export function Navigation() {
           y: isVisible ? 0 : -20
         }}
         transition={prefersReducedMotion ? undefined : { 
-          duration: 0.4,
+          duration: 0.2,
           ease: [0.5, 1, 0.89, 1]
         }}
         style={{
           top: prefersReducedMotion ? "1rem" : `${scrollProgress}rem`,
           paddingLeft: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
           paddingRight: prefersReducedMotion ? "1.5rem" : `${scrollProgress * 1.5}rem`,
-          transition: prefersReducedMotion ? undefined : "top 0.4s cubic-bezier(0.5, 1, 0.89, 1), padding-left 0.4s cubic-bezier(0.5, 1, 0.89, 1), padding-right 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+          transition: prefersReducedMotion ? undefined : "top 0.2s cubic-bezier(0.5, 1, 0.89, 1), padding-left 0.2s cubic-bezier(0.5, 1, 0.89, 1), padding-right 0.2s cubic-bezier(0.5, 1, 0.89, 1)",
         }}
       >
         <div 
@@ -284,21 +308,52 @@ export function Navigation() {
             maxWidth: prefersReducedMotion ? "1152px" : isMorphed ? "1152px" : "100%",
             marginLeft: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
             marginRight: prefersReducedMotion ? "auto" : isMorphed ? "auto" : "0",
-            transition: prefersReducedMotion ? undefined : "border-radius 0.4s cubic-bezier(0.5, 1, 0.89, 1), max-width 0.4s cubic-bezier(0.5, 1, 0.89, 1), margin-left 0.4s cubic-bezier(0.5, 1, 0.89, 1), margin-right 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+            minHeight: "60px",
+            transition: prefersReducedMotion ? undefined : "border-radius 0.2s cubic-bezier(0.5, 1, 0.89, 1), max-width 0.2s cubic-bezier(0.5, 1, 0.89, 1), margin-left 0.2s cubic-bezier(0.5, 1, 0.89, 1), margin-right 0.2s cubic-bezier(0.5, 1, 0.89, 1)",
           }}
         >
-          <div className="flex items-center justify-between">
+          <div 
+            className="flex items-center justify-between"
+            style={{
+              transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+            }}
+          >
             {/* Left side - Logo and Navigation */}
-            <div className="flex items-center gap-6">
+            <motion.div
+              initial={false}
+              animate={prefersReducedMotion ? {} : { 
+                opacity: isNavContentVisible ? 1 : 0,
+                visibility: isNavContentVisible ? "visible" : "hidden"
+              }}
+              transition={prefersReducedMotion ? undefined : { 
+                duration: 0.1,
+                ease: [0.5, 1, 0.89, 1]
+              }}
+              className="flex items-center gap-6"
+              style={{
+                transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+                pointerEvents: isNavContentVisible ? "auto" : "none",
+              }}
+            >
               <button 
                 onClick={triggerConfetti}
                 className="text-2xl hover:scale-110 transition-transform duration-200 cursor-pointer"
                 aria-label="Trigger confetti"
+                style={{
+                  transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1), transform 0.2s ease",
+                }}
               >
                 🧸
               </button>
 
-              <div className="flex space-x-1" role="menubar" aria-label="Sections">
+              <div 
+                className="flex space-x-1" 
+                role="menubar" 
+                aria-label="Sections"
+                style={{
+                  transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+                }}
+              >
                 {navItems.map((item) => (
                   <motion.button
                     key={item.name}
@@ -312,18 +367,39 @@ export function Navigation() {
                     aria-label={`Go to ${item.name}`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    style={{
+                      transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1), transform 0.2s ease, colors 0.2s ease",
+                    }}
                   >
                     {item.name}
                   </motion.button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Right side - Search Bar and Theme Toggle */}
-            <div className="flex items-center gap-3">
+            <motion.div
+              initial={false}
+              animate={prefersReducedMotion ? {} : { 
+                opacity: isNavContentVisible ? 1 : 0,
+                visibility: isNavContentVisible ? "visible" : "hidden"
+              }}
+              transition={prefersReducedMotion ? undefined : { 
+                duration: 0.1,
+                ease: [0.5, 1, 0.89, 1]
+              }}
+              className="flex items-center gap-3"
+              style={{
+                transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+                pointerEvents: isNavContentVisible ? "auto" : "none",
+              }}
+            >
               <button
                 onClick={() => setCommandOpen(true)}
-                className="flex items-center gap-3 px-4 py-2 text-sm bg-background border border-border rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-200 text-muted-foreground min-w-[240px]"
+                className="flex items-center gap-3 px-4 py-2 text-sm bg-background border border-border rounded-lg hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                style={{
+                  minWidth: "240px",
+                }}
               >
                 <Search className="w-4 h-4 shrink-0" />
                 <span className="flex-1 text-left">Search website...</span>
@@ -333,8 +409,14 @@ export function Navigation() {
                 </div>
               </button>
               
-              <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
-            </div>
+              <div
+                style={{
+                  transition: prefersReducedMotion ? undefined : "all 0.4s cubic-bezier(0.5, 1, 0.89, 1)",
+                }}
+              >
+                <AnimatedThemeToggler className="w-9 h-9 rounded-lg border border-border bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center" />
+              </div>
+            </motion.div>
           </div>
         </div>
       </motion.nav>
