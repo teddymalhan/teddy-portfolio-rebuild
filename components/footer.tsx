@@ -14,16 +14,16 @@ export default function Footer() {
         <div>
           <h3 className="font-sans text-3xl md:text-4xl font-semibold tracking-tight text-foreground">Teddy Malhan</h3>
           <Link
-            href="mailto:teddymalhan@gmail.com"
+            href="mailto:ama367@sfu.ca"
             className="mt-2 block text-base md:text-lg text-foreground/90 hover:text-foreground underline decoration-border/50 hover:decoration-primary/50 underline-offset-4"
           >
-            teddymalhan@gmail.com
+            ama367@sfu.ca
           </Link>
 
           <div className="mt-5 flex gap-2">
             <Button variant="ghost" size="icon" asChild>
               <a
-                href="mailto:teddymalhan@gmail.com"
+                href="mailto:ama367@sfu.ca"
                 aria-label="Email"
               >
                 <Mail className="text-foreground/90" />
@@ -63,7 +63,7 @@ export default function Footer() {
             <p className="font-medium text-foreground">Social</p>
             <a href="https://github.com/teddymalhan" target="_blank" rel="noreferrer noopener" className="text-muted-foreground hover:text-foreground">GitHub</a>
             <a href="https://www.linkedin.com/in/teddymalhan/" target="_blank" rel="noreferrer noopener" className="text-muted-foreground hover:text-foreground">LinkedIn</a>
-            <a href="mailto:teddymalhan@gmail.com" className="text-muted-foreground hover:text-foreground">Email</a>
+            <a href="mailto:ama367@sfu.ca" className="text-muted-foreground hover:text-foreground">Email</a>
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-medium text-foreground">More</p>
