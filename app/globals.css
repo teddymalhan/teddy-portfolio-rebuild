@@ -140,6 +140,9 @@
   body {
     /* Prevent Safari from allowing the entire page to scroll when navigation is fixed */
     position: relative;
+    font-feature-settings: "calt", "rlig";
+    font-variation-settings: normal;
+    -webkit-font-smoothing: antialiased;
   }
   
   /* Ensure fixed navigation stays in place in Safari */
