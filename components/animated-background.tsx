@@ -6,10 +6,22 @@ import { cn } from "@/lib/utils"
 interface BlobProps extends React.HTMLAttributes<HTMLDivElement> {
   firstBlobColor: string;
   secondBlobColor: string;
+  isActive?: boolean;
 }
 
-export function AnimatedBackground() {
+interface AnimatedBackgroundProps {
+  isActive?: boolean
+}
+
+export function AnimatedBackground({ isActive = true }: AnimatedBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const animationFrameRef = useRef<number | null>(null)
+  const isActiveRef = useRef(isActive)
+
+  // Update ref when isActive changes
+  useEffect(() => {
+    isActiveRef.current = isActive
+  }, [isActive])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -73,6 +85,12 @@ export function AnimatedBackground() {
     }
 
     const animate = () => {
+      // Only animate if active
+      if (!isActiveRef.current) {
+        animationFrameRef.current = requestAnimationFrame(animate)
+        return
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       // Draw grid lines
@@ -132,13 +150,16 @@ export function AnimatedBackground() {
         }
       }
 
-      requestAnimationFrame(animate)
+      animationFrameRef.current = requestAnimationFrame(animate)
     }
 
     animate()
 
     return () => {
       window.removeEventListener("resize", resizeCanvas)
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
     }
   }, [])
 
@@ -150,18 +171,21 @@ export function AnimatedBackground() {
         <BlurryBlob 
           firstBlobColor="bg-cyan-400" 
           secondBlobColor="bg-blue-500"
+          isActive={isActive}
         />
       </div>
       <div className="absolute bottom-1/3 right-1/4">
         <BlurryBlob 
           firstBlobColor="bg-purple-400" 
           secondBlobColor="bg-pink-500"
+          isActive={isActive}
         />
       </div>
       <div className="absolute top-1/2 right-1/3">
         <BlurryBlob 
           firstBlobColor="bg-indigo-400" 
           secondBlobColor="bg-violet-500"
+          isActive={isActive}
         />
       </div>
     </div>
@@ -172,6 +196,7 @@ export function BlurryBlob({
   className,
   firstBlobColor,
   secondBlobColor,
+  isActive = true,
 }: BlobProps) {
   return (
     <div className="min-h-52 min-w-52 items-center justify-center">
@@ -182,6 +207,7 @@ export function BlurryBlob({
             className,
             firstBlobColor,
           )}
+          style={{ animationPlayState: isActive ? 'running' : 'paused' }}
         ></div>
         <div
           className={cn(
@@ -189,6 +215,7 @@ export function BlurryBlob({
             className,
             secondBlobColor,
           )}
+          style={{ animationPlayState: isActive ? 'running' : 'paused' }}
         ></div>
       </div>
     </div>

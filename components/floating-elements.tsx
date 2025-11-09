@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 interface FloatingElement {
   id: number
@@ -15,6 +15,10 @@ interface FloatingElement {
   type: "cube" | "star" | "circle" | "triangle"
   color: string
   size: number
+}
+
+interface FloatingElementsProps {
+  isActive?: boolean
 }
 
 const getContentExclusionZones = () => {
@@ -64,8 +68,15 @@ const isInExclusionZone = (x: number, y: number, size: number) => {
   )
 }
 
-export function FloatingElements() {
+export function FloatingElements({ isActive = true }: FloatingElementsProps) {
   const [elements, setElements] = useState<FloatingElement[]>([])
+  const isActiveRef = useRef(isActive)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Update ref when isActive changes
+  useEffect(() => {
+    isActiveRef.current = isActive
+  }, [isActive])
 
   useEffect(() => {
     const colors = ["#4F8EF7", "#7C3AED", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899", "#06B6D4"]
@@ -108,6 +119,11 @@ export function FloatingElements() {
 
   useEffect(() => {
     const animate = () => {
+      // Only animate if active
+      if (!isActiveRef.current) {
+        return
+      }
+
       setElements((prev) =>
         prev.map((element) => {
           let newX = element.x + element.vx
@@ -153,8 +169,19 @@ export function FloatingElements() {
       )
     }
 
-    const interval = setInterval(animate, 25)
-    return () => clearInterval(interval)
+    // Clear existing interval if any
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
+
+    // Start animation interval
+    intervalRef.current = setInterval(animate, 25)
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
   }, [])
 
   const renderElement = (element: FloatingElement) => {
