@@ -55,7 +55,7 @@ export function Hero() {
       <section id="home" className="min-h-screen flex items-center justify-center relative">
         <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
         <div className="mb-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-2 text-balance">
+          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-4 text-balance">
             <span className="relative inline-block pb-2">
               hi! i'm teddy! <span 
                 style={{
@@ -101,7 +101,7 @@ export function Hero() {
             
             </h1>
 
-          <h2 className="text-xl md:text-2xl mb-6 font-medium text-[#575757] dark:text-white">
+          <h2 className="text-xl md:text-2xl mb-6 font-medium text-foreground">
             cs major @{" "}
             <span className="inline-flex items-center gap-1">
               <img 
@@ -114,7 +114,7 @@ export function Hero() {
             , graduating <TextHighlighter highlightColor="rgb(16, 185, 129)" className="text-white px-2 py-1 rounded font-bold">2027</TextHighlighter>
           </h2>
 
-          <h2 className="text-xl md:text-2xl mb-6 font-medium text-[#575757] dark:text-white">
+          <h2 className="text-xl md:text-2xl mb-6 font-medium text-foreground">
             prev. swe intern at{" "}
             <span className="inline-flex items-center gap-1">
               <img 
