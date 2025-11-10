@@ -1,8 +1,6 @@
 import Link from "next/link"
 import { Mail, Github, Linkedin } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
-
 export default function Footer() {
   return (
     <footer className="relative mx-auto w-full max-w-6xl px-6 py-10 md:py-14">
@@ -21,34 +19,31 @@ export default function Footer() {
           </Link>
 
           <div className="mt-5 flex gap-2">
-            <Button variant="ghost" size="icon" asChild>
-              <a
-                href="mailto:ama367@sfu.ca"
-                aria-label="Email"
-              >
-                <Mail className="text-foreground/90" />
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <a
-                href="https://github.com/teddymalhan"
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="GitHub"
-              >
-                <Github className="text-foreground/90" />
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <a
-                href="https://www.linkedin.com/in/teddymalhan/"
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="text-foreground/90" />
-              </a>
-            </Button>
+            <a
+              href="mailto:ama367@sfu.ca"
+              aria-label="Email"
+              className="fill rounded-md p-2"
+            >
+              <Mail className="w-5 h-5" />
+            </a>
+            <a
+              href="https://github.com/teddymalhan"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="GitHub"
+              className="fill rounded-md p-2"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/teddymalhan/"
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="LinkedIn"
+              className="fill rounded-md p-2"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
           </div>
         </div>
 

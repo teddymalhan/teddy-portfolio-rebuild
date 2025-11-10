@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
@@ -148,22 +147,20 @@ export function Hero() {
         </div>
 
         <div className="flex items-center justify-center space-x-4">
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={() => window.open("https://linkedin.com/in/teddymalhan", "_blank")}
-            className="hover:text-primary"
+            className="fill rounded-md p-2"
+            aria-label="LinkedIn"
           >
-            <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5 text-foreground" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
+            <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5" />
+          </button>
+          <button
             onClick={() => window.open("https://github.com/teddymalhan", "_blank")}
-            className="hover:text-primary"
+            className="fill rounded-md p-2"
+            aria-label="GitHub"
           >
-            <FontAwesomeIcon icon={faGithub} className="w-5 h-5 text-foreground" />
-          </Button>
+            <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>

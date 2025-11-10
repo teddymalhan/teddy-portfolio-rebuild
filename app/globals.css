@@ -199,3 +199,56 @@
     animation: none;
     mix-blend-mode: normal;
 }
+
+/* Fill button effect - matches page theme */
+.fill {
+  background: none;
+  border: none;
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+/* Light mode: black icons, hover to black background with white icons */
+.fill {
+  --color: black;
+  --hover: black;
+  color: var(--color);
+}
+
+.fill svg {
+  color: black;
+  transition: color 0.25s;
+}
+
+.fill:hover,
+.fill:focus {
+  box-shadow: inset 0 0 0 2em var(--hover);
+  color: white;
+}
+
+.fill:hover svg,
+.fill:focus svg {
+  color: white;
+}
+
+/* Dark mode: white icons, hover to white background with black icons */
+.dark .fill {
+  --color: white;
+  --hover: white;
+  color: var(--color);
+}
+
+.dark .fill svg {
+  color: white;
+}
+
+.dark .fill:hover,
+.dark .fill:focus {
+  box-shadow: inset 0 0 0 2em var(--hover);
+  color: black;
+}
+
+.dark .fill:hover svg,
+.dark .fill:focus svg {
+  color: black;
+}
