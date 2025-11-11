@@ -12,15 +12,15 @@ export default clerkMiddleware(async (auth, req) => {
   // Helper function to add security headers
   const addSecurityHeaders = (response: NextResponse) => {
     // Content Security Policy
-    // Allows: self, Clerk, Vercel Analytics, Google Fonts, Vercel Blob, and necessary inline scripts
+    // Allows: self, Clerk (including custom domains), Vercel Analytics/Live, Google Fonts, Vercel Blob, and necessary inline scripts
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev https://vitals.vercel-insights.com",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vitals.vercel-insights.com https://vercel.live",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: https: blob:",
-      "connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://vitals.vercel-insights.com https://*.vercel-storage.com",
-      "frame-src 'self' https://*.clerk.com https://*.clerk.accounts.dev",
+      "connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca https://vitals.vercel-insights.com https://vercel.live https://*.vercel-storage.com",
+      "frame-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.malhan.ca",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
