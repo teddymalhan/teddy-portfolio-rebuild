@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, X, FileStack, HardDrive, Clock, CheckCircle2 } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, X, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -31,6 +31,9 @@ export function ResumeManager() {
   const [previewResume, setPreviewResume] = useState<ResumeVersion | null>(null)
   const [editingNotes, setEditingNotes] = useState<ResumeVersion | null>(null)
   const [notesText, setNotesText] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
+  const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'size-desc' | 'size-asc'>('date-desc')
 
   useEffect(() => {
     fetchResumes()
@@ -175,6 +178,50 @@ export function ResumeManager() {
     }
   }
 
+  // Filter and sort resumes
+  const filteredAndSortedResumes = useMemo(() => {
+    let filtered = resumes
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(
+        (r) =>
+          r.filename.toLowerCase().includes(query) ||
+          (r.notes && r.notes.toLowerCase().includes(query))
+      )
+    }
+
+    // Status filter
+    if (filterStatus === 'active') {
+      filtered = filtered.filter((r) => r.isActive)
+    } else if (filterStatus === 'inactive') {
+      filtered = filtered.filter((r) => !r.isActive)
+    }
+
+    // Sort
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'date-desc':
+          return new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+        case 'date-asc':
+          return new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime()
+        case 'name-asc':
+          return a.filename.localeCompare(b.filename)
+        case 'name-desc':
+          return b.filename.localeCompare(a.filename)
+        case 'size-desc':
+          return (b.fileSize || 0) - (a.fileSize || 0)
+        case 'size-asc':
+          return (a.fileSize || 0) - (b.fileSize || 0)
+        default:
+          return 0
+      }
+    })
+
+    return sorted
+  }, [resumes, searchQuery, filterStatus, sortBy])
+
   // Calculate statistics
   const totalResumes = resumes.length
   const activeResume = resumes.find((r) => r.isActive)
@@ -303,7 +350,56 @@ export function ResumeManager() {
 
       {/* Resume List */}
       <Card className="p-6">
-        <h2 className="text-2xl font-semibold mb-4">Resume Versions</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-semibold">Resume Versions</h2>
+          
+          {/* Search, Filter, and Sort Controls */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Search */}
+            <div className="relative flex-1 sm:min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search by filename or notes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              />
+            </div>
+
+            {/* Filter */}
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value as 'all' | 'active' | 'inactive')}
+                className="pl-9 pr-8 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 appearance-none cursor-pointer"
+              >
+                <option value="all">All Resumes</option>
+                <option value="active">Active Only</option>
+                <option value="inactive">Inactive Only</option>
+              </select>
+            </div>
+
+            {/* Sort */}
+            <div className="relative">
+              <ArrowUpDown className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                className="pl-9 pr-8 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 appearance-none cursor-pointer"
+              >
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="size-desc">Largest First</option>
+                <option value="size-asc">Smallest First</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -312,9 +408,13 @@ export function ResumeManager() {
           <p className="text-muted-foreground py-8 text-center">
             No resumes uploaded yet. Upload your first resume above.
           </p>
+        ) : filteredAndSortedResumes.length === 0 ? (
+          <p className="text-muted-foreground py-8 text-center">
+            No resumes match your search criteria.
+          </p>
         ) : (
           <div className="space-y-3">
-            {resumes.map((resume) => (
+            {filteredAndSortedResumes.map((resume) => (
               <div
                 key={resume.id}
                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
