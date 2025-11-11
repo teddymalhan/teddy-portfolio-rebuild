@@ -81,9 +81,11 @@ export function ResumeManager() {
       setLoading(true)
       const res = await fetch('/api/resume/versions')
       const data = await handleApiResponse<ResumeResponse[]>(res)
+      console.log('Fetched resumes:', data)
       setResumes(data)
-    } catch (error) {
-      toast.error('Failed to load resumes')
+    } catch (error: any) {
+      console.error('Failed to fetch resumes:', error)
+      toast.error(error.message || 'Failed to load resumes')
     } finally {
       setLoading(false)
     }

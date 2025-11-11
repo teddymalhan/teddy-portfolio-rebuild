@@ -1,9 +1,10 @@
 import { neon } from '@neondatabase/serverless'
+import type { NeonQueryFunction } from '@neondatabase/serverless'
 
 // Lazy initialization to avoid build-time database connection
 let sqlInstance: ReturnType<typeof neon> | null = null
 
-export function getSql() {
+function getSql() {
   if (!sqlInstance) {
     // Only initialize if DATABASE_URL is available (runtime, not build time)
     const dbUrl = process.env.DATABASE_URL
@@ -15,11 +16,13 @@ export function getSql() {
   return sqlInstance
 }
 
-// Export sql for backward compatibility, but it will be initialized lazily
-export const sql = new Proxy({} as ReturnType<typeof neon>, {
-  get(_target, prop) {
-    return getSql()[prop as keyof ReturnType<typeof neon>]
-  },
-})
+// Create a callable function that works as a template tag
+// This proxies template tag calls to the lazily-initialized neon instance
+const sqlTemplateTag = ((strings: TemplateStringsArray, ...values: any[]) => {
+  const instance = getSql()
+  return instance(strings, ...values)
+}) as NeonQueryFunction<boolean, boolean>
+
+export const sql = sqlTemplateTag
 
 

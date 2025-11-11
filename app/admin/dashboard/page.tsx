@@ -10,6 +10,7 @@ import { LogOut, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ResumeManager } from '@/components/admin/resume-manager'
 import Link from 'next/link'
+import { handleApiResponse } from '@/lib/api-client'
 
 export default function AdminDashboard() {
   const { isSignedIn, isLoaded } = useAuth()
@@ -29,15 +30,9 @@ export default function AdminDashboard() {
 
       try {
         const response = await fetch('/api/auth/check-admin')
-        const result = await response.json()
+        const data = await handleApiResponse<{ authorized: boolean }>(response)
         
-        if (!response.ok || !result.success) {
-          console.log('Not authorized as admin')
-          router.push('/')
-          return
-        }
-
-        if (!result.data?.authorized) {
+        if (!data.authorized) {
           console.log('Not authorized as admin')
           router.push('/')
           return
@@ -99,4 +94,3 @@ export default function AdminDashboard() {
     </div>
   )
 }
-
