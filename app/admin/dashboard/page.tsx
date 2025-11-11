@@ -26,10 +26,15 @@ export default function AdminDashboard() {
 
       try {
         const response = await fetch('/api/auth/check-admin')
-        const data = await response.json()
-        console.log('Admin check response:', data)
+        const result = await response.json()
+        
+        if (!response.ok || !result.success) {
+          console.log('Not authorized as admin')
+          router.push('/')
+          return
+        }
 
-        if (!data.authorized) {
+        if (!result.data?.authorized) {
           console.log('Not authorized as admin')
           router.push('/')
           return

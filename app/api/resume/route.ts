@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { put } from '@vercel/blob'
-import { sql } from '@/lib/db'
 import { isAuthorizedAdmin, getCurrentUserId } from '@/lib/auth'
+import { resumeService } from '@/lib/services/resume-service'
+import { createErrorResponse, createSuccessResponse, logError } from '@/lib/api-response'
+import { validateFile } from '@/lib/validations/resume'
 
 // Force dynamic rendering to prevent caching
 export const dynamic = 'force-dynamic'
@@ -10,15 +12,10 @@ export const revalidate = 0
 // GET - Get current active resume
 export async function GET() {
   try {
-    const result = await sql`
-      SELECT * FROM resumes 
-      WHERE is_active = TRUE 
-      ORDER BY uploaded_at DESC 
-      LIMIT 1
-    ` as any[]
+    const resume = await resumeService.getActiveResume()
 
-    if (result.length === 0) {
-      return NextResponse.json({
+    if (!resume) {
+      return createSuccessResponse({
         id: null,
         filename: null,
         path: null,
@@ -28,27 +25,14 @@ export async function GET() {
       })
     }
 
-    const resume = result[0]
-    return NextResponse.json({
-      id: resume.id,
-      filename: resume.filename,
-      path: resume.blob_url,
-      blob_url: resume.blob_url,
-      isActive: resume.is_active,
-      uploadedAt: resume.uploaded_at,
-      fileSize: resume.file_size,
-    }, {
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      },
-    })
+    const response = createSuccessResponse(resume)
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    return response
   } catch (error) {
-    console.error('Error fetching resume')
-    return NextResponse.json({
-      error: 'Failed to fetch resume',
-    }, { status: 500 })
+    logError('GET /api/resume', error)
+    return createErrorResponse('Failed to fetch resume', 500, 'FETCH_ERROR')
   }
 }
 
@@ -56,48 +40,25 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const isAdmin = await isAuthorizedAdmin()
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    return createErrorResponse('Unauthorized', 403, 'UNAUTHORIZED')
   }
 
   try {
     const formData = await request.formData()
-    const file = formData.get('file') as File
+    const file = formData.get('file') as File | null
 
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    // Validate file
+    const fileValidation = validateFile(file)
+    if (!fileValidation.valid) {
+      return createErrorResponse(fileValidation.error!, 400, 'INVALID_FILE')
     }
 
-    if (file.type !== 'application/pdf') {
-      return NextResponse.json(
-        { error: 'Only PDF files are allowed' },
-        { status: 400 }
-      )
-    }
-
-    // Validate file size (10MB limit)
-    const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { error: 'File size must be less than 10MB' },
-        { status: 400 }
-      )
-    }
-
-    // Validate filename length
-    if (file.name.length > 255) {
-      return NextResponse.json(
-        { error: 'Filename must be less than 255 characters' },
-        { status: 400 }
-      )
-    }
-
-    // Generate unique filename
+    // Generate unique blob key
     const timestamp = Date.now()
-    const filename = `resume-${timestamp}.pdf`
-    const blobKey = `resumes/${filename}`
+    const blobKey = `resumes/resume-${timestamp}.pdf`
 
     // Upload to Vercel Blob
-    const blob = await put(blobKey, file, {
+    const blob = await put(blobKey, file!, {
       access: 'public',
       contentType: 'application/pdf',
     })
@@ -105,27 +66,26 @@ export async function POST(request: NextRequest) {
     const userId = await getCurrentUserId()
 
     // Save metadata to database
-    const result = await sql`
-      INSERT INTO resumes (filename, blob_url, blob_key, uploaded_by, file_size, mime_type)
-      VALUES (${file.name}, ${blob.url}, ${blobKey}, ${userId || 'unknown'}, ${file.size}, ${file.type})
-      RETURNING *
-    ` as any[]
+    const resumeRow = await resumeService.createResume({
+      filename: file!.name,
+      blob_url: blob.url,
+      blob_key: blobKey,
+      uploaded_by: userId || 'unknown',
+      file_size: file!.size,
+      mime_type: file!.type,
+    })
 
-    return NextResponse.json({
-      success: true,
-      resume: {
-        id: result[0].id,
-        filename: result[0].filename,
-        blob_url: result[0].blob_url,
-        uploadedAt: result[0].uploaded_at,
-      },
+    return createSuccessResponse({
+      id: resumeRow.id,
+      filename: resumeRow.filename,
+      blob_url: resumeRow.blob_url,
+      uploadedAt: typeof resumeRow.uploaded_at === 'string' 
+        ? resumeRow.uploaded_at 
+        : resumeRow.uploaded_at.toISOString(),
     })
   } catch (error) {
-    console.error('Error uploading resume')
-    return NextResponse.json(
-      { error: 'Failed to upload resume' },
-      { status: 500 }
-    )
+    logError('POST /api/resume', error)
+    return createErrorResponse('Failed to upload resume', 500, 'UPLOAD_ERROR')
   }
 }
 

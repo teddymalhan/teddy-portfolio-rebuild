@@ -12,17 +12,10 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { toast } from 'sonner'
+import { handleApiResponse } from '@/lib/api-client'
+import type { ResumeResponse, VisibilityResponse } from '@/types/api'
 
-interface ResumeVersion {
-  id: number
-  filename: string
-  path: string
-  blob_url: string
-  isActive: boolean
-  uploadedAt: string
-  fileSize?: number
-  notes?: string | null
-}
+interface ResumeVersion extends ResumeResponse {}
 
 export function ResumeManager() {
   const [resumes, setResumes] = useState<ResumeVersion[]>([])
@@ -49,12 +42,7 @@ export function ResumeManager() {
   async function fetchVisibility() {
     try {
       const res = await fetch('/api/resume/visibility')
-      const data = await res.json()
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to fetch')
-      }
-      
+      const data = await handleApiResponse<VisibilityResponse>(res)
       setIsResumeVisible(data.isVisible)
     } catch (error) {
       console.error('Failed to fetch visibility:', error)
@@ -72,11 +60,7 @@ export function ResumeManager() {
         body: JSON.stringify({ isVisible: newVisibility }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to toggle visibility')
-      }
+      const data = await handleApiResponse<VisibilityResponse>(res)
 
       // Use the value returned from the API (which is verified from the database)
       setIsResumeVisible(data.isVisible)
@@ -96,8 +80,7 @@ export function ResumeManager() {
     try {
       setLoading(true)
       const res = await fetch('/api/resume/versions')
-      if (!res.ok) throw new Error('Failed to fetch')
-      const data = await res.json()
+      const data = await handleApiResponse<ResumeResponse[]>(res)
       setResumes(data)
     } catch (error) {
       toast.error('Failed to load resumes')
@@ -130,18 +113,14 @@ export function ResumeManager() {
         body: formData,
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Upload failed')
-      }
+      const data = await handleApiResponse<{ id: number; filename: string; blob_url: string; uploadedAt: string }>(res)
 
       toast.success('Resume uploaded successfully')
       fetchResumes()
       
       // Auto-set as active if option is enabled
-      if (autoSetActive && data.resume?.id) {
-        await setActive(data.resume.id)
+      if (autoSetActive && data.id) {
+        await setActive(data.id)
       }
       
       // Reset file input
@@ -161,11 +140,7 @@ export function ResumeManager() {
         body: JSON.stringify({ resumeId }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to set active')
-      }
+      await handleApiResponse(res)
 
       toast.success('Active resume updated')
       fetchResumes()
@@ -187,11 +162,7 @@ export function ResumeManager() {
         method: 'DELETE',
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Delete failed')
-      }
+      await handleApiResponse(res)
 
       toast.success('Resume deleted')
       fetchResumes()
@@ -299,11 +270,7 @@ export function ResumeManager() {
         body: JSON.stringify({ notes: notesText.trim() || null }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to update notes')
-      }
+      await handleApiResponse(res)
 
       toast.success('Notes updated')
       setEditingNotes(null)
@@ -341,11 +308,7 @@ export function ResumeManager() {
         body: JSON.stringify({ filename: trimmedFilename }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to rename resume')
-      }
+      await handleApiResponse(res)
 
       toast.success('Resume renamed')
       setRenamingResume(null)

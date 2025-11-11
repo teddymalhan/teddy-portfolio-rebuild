@@ -1,45 +1,47 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { sql } from '@/lib/db'
+import { NextRequest } from 'next/server'
 import { isAuthorizedAdmin } from '@/lib/auth'
+import { resumeService } from '@/lib/services/resume-service'
+import { createErrorResponse, createSuccessResponse, logError } from '@/lib/api-response'
+import { setActiveResumeSchema } from '@/lib/validations/resume'
 
 export async function PUT(request: NextRequest) {
   const isAdmin = await isAuthorizedAdmin()
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    return createErrorResponse('Unauthorized', 403, 'UNAUTHORIZED')
   }
 
   try {
-    const { resumeId } = await request.json()
+    const body = await request.json()
+    const validationResult = setActiveResumeSchema.safeParse(body)
 
-    if (!resumeId) {
-      return NextResponse.json({ error: 'Resume ID required' }, { status: 400 })
+    if (!validationResult.success) {
+      return createErrorResponse(
+        validationResult.error.errors[0]?.message || 'Invalid request',
+        400,
+        'VALIDATION_ERROR'
+      )
     }
 
-    // Set all resumes to inactive first
-    await sql`UPDATE resumes SET is_active = FALSE`
+    const { resumeId } = validationResult.data
+    const resumeRow = await resumeService.setActiveResume(resumeId)
 
-    // Set the selected resume as active
-    const result = await sql`
-      UPDATE resumes 
-      SET is_active = TRUE 
-      WHERE id = ${resumeId}
-      RETURNING *
-    ` as any[]
-
-    if (result.length === 0) {
-      return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
-    }
-
-    return NextResponse.json({
-      success: true,
-      resume: result[0],
+    return createSuccessResponse({
+      id: resumeRow.id,
+      filename: resumeRow.filename,
+      blob_url: resumeRow.blob_url,
+      is_active: resumeRow.is_active,
+      uploaded_at: typeof resumeRow.uploaded_at === 'string' 
+        ? resumeRow.uploaded_at 
+        : resumeRow.uploaded_at.toISOString(),
     })
   } catch (error) {
-    console.error('Error setting active resume')
-    return NextResponse.json(
-      { error: 'Failed to set active resume' },
-      { status: 500 }
-    )
+    logError('PUT /api/resume/active', error)
+    
+    if (error instanceof Error && error.message === 'Resume not found') {
+      return createErrorResponse('Resume not found', 404, 'RESUME_NOT_FOUND')
+    }
+    
+    return createErrorResponse('Failed to set active resume', 500, 'UPDATE_ERROR')
   }
 }
 

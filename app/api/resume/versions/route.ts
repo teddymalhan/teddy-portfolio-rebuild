@@ -1,34 +1,19 @@
-import { NextResponse } from 'next/server'
-import { sql } from '@/lib/db'
 import { isAuthorizedAdmin } from '@/lib/auth'
+import { resumeService } from '@/lib/services/resume-service'
+import { createErrorResponse, createSuccessResponse, logError } from '@/lib/api-response'
 
 export async function GET() {
   const isAdmin = await isAuthorizedAdmin()
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    return createErrorResponse('Unauthorized', 403, 'UNAUTHORIZED')
   }
 
   try {
-    const result = await sql`
-      SELECT * FROM resumes 
-      ORDER BY uploaded_at DESC
-    ` as any[]
-
-    return NextResponse.json(
-      result.map((row) => ({
-        id: row.id,
-        filename: row.filename,
-        path: row.blob_url,
-        blob_url: row.blob_url,
-        isActive: row.is_active,
-        uploadedAt: row.uploaded_at,
-        fileSize: row.file_size,
-        notes: row.notes || null,
-      }))
-    )
+    const resumes = await resumeService.getAllResumes()
+    return createSuccessResponse(resumes)
   } catch (error) {
-    console.error('Error fetching resumes')
-    return NextResponse.json({ error: 'Failed to fetch resumes' }, { status: 500 })
+    logError('GET /api/resume/versions', error)
+    return createErrorResponse('Failed to fetch resumes', 500, 'FETCH_ERROR')
   }
 }
 

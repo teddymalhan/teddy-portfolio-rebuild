@@ -13,10 +13,10 @@ export async function isAuthorizedAdmin(): Promise<boolean> {
   if (!user) return false
 
   // Option 1: Check against environment variable (simplest)
-  const authorizedEmails = process.env.AUTHORIZED_ADMINS?.split(',') || []
+  const { env } = await import('./env')
   const userEmail = user.emailAddresses[0]?.emailAddress
 
-  if (userEmail && authorizedEmails.includes(userEmail)) {
+  if (userEmail && env.AUTHORIZED_ADMINS.includes(userEmail)) {
     return true
   }
 
