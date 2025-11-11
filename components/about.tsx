@@ -30,7 +30,7 @@ export function About() {
           <div className="mx-auto mb-6 max-w-prose md:mb-8">
             <h2 className="font-semibold tracking-tight text-2xl text-foreground md:text-3xl">
               <TextHighlighter className="px-1 py-0.5 rounded-md" highlightColor="hsl(var(--primary)/0.25)">
-                Hi, I'm Teddy — I build thoughtful software.
+                Hi, I&apos;m Teddy — I build thoughtful software.
               </TextHighlighter>
             </h2>
           </div>
@@ -38,13 +38,13 @@ export function About() {
           {/* Copy */}
           <div className="mx-auto max-w-prose space-y-5 text-left text-muted-foreground leading-relaxed md:space-y-6">
             <p className="text-foreground">
-              I'm a Computer Science student and software engineer focused on design systems, developer tooling, and data-driven applications.
+              I&apos;m a Computer Science student and software engineer focused on design systems, developer tooling, and data-driven applications.
             </p>
             <p>
               I care about shipping fast without sacrificing polish. From product thinking to implementation, I enjoy crafting experiences that feel intuitive, performant, and visually cohesive.
             </p>
             <p>
-              When I'm not coding, you'll find me on a tennis court, at the gym, or exploring UI/UX patterns. If you're building something interesting, I'd love to chat.
+              When I&apos;m not coding, you&apos;ll find me on a tennis court, at the gym, or exploring UI/UX patterns. If you&apos;re building something interesting, I&apos;d love to chat.
             </p>
           </div>
         </div>

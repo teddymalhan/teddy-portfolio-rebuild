@@ -248,7 +248,7 @@ export function ResumeManager() {
     }
   }
 
-  function formatFileSize(bytes?: number) {
+  function formatFileSize(bytes?: number | null) {
     if (!bytes) return 'Unknown size'
     if (bytes < 1024) return `${bytes} B`
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`

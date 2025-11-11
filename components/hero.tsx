@@ -86,7 +86,7 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
         <div className="mb-8">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-4 text-balance">
             <span className="relative inline-block pb-2">
-              hi! i'm teddy! <span 
+              hi! i&apos;m teddy! <span 
                 style={{
                   display: 'inline-block',
                   animation: 'rotateHand 1s linear(0, 0.315 10.5%, 0.502 18.4%, 0.567 22.2%, 0.613 25.9%, 0.64 29.6%, 0.65 33.3%, 0.628 39.2%, 0.563 45.6%, 0.202 67.6%, 0.082 77.1%, 0.041 82.1%, 0.016 87.2%, 0.003 92.7%, 0) forwards',

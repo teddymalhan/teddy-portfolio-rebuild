@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useCallback,
 } from "react"
 import { motion, Transition, useInView, UseInViewOptions } from "motion/react"
 
@@ -103,15 +104,17 @@ export const TextHighlighter = forwardRef<
     const [currentDirection, setCurrentDirection] =
       useState<HighlightDirection>(direction)
 
+    // Always call useInView hook unconditionally
+    const isInViewResult = useInView(componentRef, useInViewOptions)
+    
+    // Determine if in view based on trigger type
+    const isInView =
+      triggerType === "inView" ? isInViewResult : false
+
     // this allows us to change the direction whenever the direction prop changes
     useEffect(() => {
       setCurrentDirection(direction)
     }, [direction])
-
-    const isInView =
-      triggerType === "inView"
-        ? useInView(componentRef, useInViewOptions)
-        : false
 
     useImperativeHandle(ref, () => ({
       animate: (animationDirection?: HighlightDirection) => {
@@ -136,8 +139,8 @@ export const TextHighlighter = forwardRef<
 
     const ElementTag = as || "span"
 
-    // Get background size based on direction
-    const getBackgroundSize = (animated: boolean) => {
+    // Get background size based on direction - memoized with useCallback
+    const getBackgroundSize = useCallback((animated: boolean) => {
       switch (currentDirection) {
         case "ltr":
           return animated ? "100% 100%" : "0% 100%"
@@ -150,10 +153,10 @@ export const TextHighlighter = forwardRef<
         default:
           return animated ? "100% 100%" : "0% 100%"
       }
-    }
+    }, [currentDirection])
 
-    // Get background position based on direction
-    const getBackgroundPosition = () => {
+    // Get background position based on direction - memoized with useCallback
+    const getBackgroundPosition = useCallback(() => {
       switch (currentDirection) {
         case "ltr":
           return "0% 0%"
@@ -166,11 +169,11 @@ export const TextHighlighter = forwardRef<
         default:
           return "0% 0%"
       }
-    }
+    }, [currentDirection])
 
-    const animatedSize = useMemo(() => getBackgroundSize(shouldAnimate), [shouldAnimate, currentDirection])
-    const initialSize = useMemo(() => getBackgroundSize(false), [currentDirection])
-    const backgroundPosition = useMemo(() => getBackgroundPosition(), [currentDirection])
+    const animatedSize = useMemo(() => getBackgroundSize(shouldAnimate), [shouldAnimate, getBackgroundSize])
+    const initialSize = useMemo(() => getBackgroundSize(false), [getBackgroundSize])
+    const backgroundPosition = useMemo(() => getBackgroundPosition(), [getBackgroundPosition])
 
     const highlightStyle = {
       backgroundImage: `linear-gradient(${highlightColor}, ${highlightColor})`,

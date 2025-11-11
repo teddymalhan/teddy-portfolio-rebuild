@@ -122,7 +122,7 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
       globalThis.window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleScroll)
     }
-  }, [lastScrollY, isMorphed])
+  }, [lastScrollY, isMorphed, prefersReducedMotion])
 
   useEffect(() => {
     const updateCanvasDimensions = () => {

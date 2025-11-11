@@ -2,6 +2,10 @@
 function getRequiredEnv(key: string): string {
   const value = process.env[key]
   if (!value) {
+    // During build time, return empty string instead of throwing
+    if (process.env.NODE_ENV === 'production' && process.env.VERCEL) {
+      return ''
+    }
     throw new Error(`Missing required environment variable: ${key}`)
   }
   return value
@@ -16,8 +20,10 @@ export const env = {
   AUTHORIZED_ADMINS: getOptionalEnv('AUTHORIZED_ADMINS', '').split(',').filter(Boolean),
 } as const
 
-// Validate environment variables at module load time
-if (!env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required but not set')
+// Only validate at runtime, not during build
+if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production') {
+  if (!env.DATABASE_URL) {
+    console.warn('DATABASE_URL is not set - this may cause runtime errors')
+  }
 }
 

@@ -1,5 +1,8 @@
 "use client"
 
+// Force dynamic rendering - this page requires authentication
+export const dynamic = 'force-dynamic'
+
 import { useAuth, SignOutButton } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
