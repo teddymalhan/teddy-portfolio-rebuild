@@ -3,9 +3,10 @@
 import { useAuth, SignOutButton } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LogOut } from 'lucide-react'
+import { LogOut, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ResumeManager } from '@/components/admin/resume-manager'
+import Link from 'next/link'
 
 export default function AdminDashboard() {
   const { isSignedIn, isLoaded } = useAuth()
@@ -70,12 +71,20 @@ export default function AdminDashboard() {
               Manage resume versions and control which one is displayed on your site
             </p>
           </div>
-          <SignOutButton>
-            <Button variant="outline" size="sm" className="gap-2">
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </Button>
-          </SignOutButton>
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Home className="w-4 h-4" />
+                Home
+              </Button>
+            </Link>
+            <SignOutButton>
+              <Button variant="outline" size="sm" className="gap-2">
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </Button>
+            </SignOutButton>
+          </div>
         </div>
         <ResumeManager />
       </div>
