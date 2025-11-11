@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown, Pencil } from 'lucide-react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown, Pencil, EyeOff, Eye as EyeIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -36,10 +36,59 @@ export function ResumeManager() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'size-desc' | 'size-asc'>('date-desc')
+  const [isResumeVisible, setIsResumeVisible] = useState(true)
+  const [togglingVisibility, setTogglingVisibility] = useState(false)
 
   useEffect(() => {
     fetchResumes()
+    fetchVisibility()
   }, [])
+
+  async function fetchVisibility() {
+    try {
+      const res = await fetch('/api/resume/visibility')
+      const data = await res.json()
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to fetch')
+      }
+      
+      setIsResumeVisible(data.isVisible)
+    } catch (error) {
+      console.error('Failed to fetch visibility:', error)
+      // Keep default state (visible) on error
+    }
+  }
+
+  async function toggleVisibility() {
+    try {
+      setTogglingVisibility(true)
+      const newVisibility = !isResumeVisible
+      const res = await fetch('/api/resume/visibility', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isVisible: newVisibility }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to toggle visibility')
+      }
+
+      // Use the value returned from the API (which is verified from the database)
+      setIsResumeVisible(data.isVisible)
+      toast.success(
+        data.isVisible 
+          ? 'Resume is now visible on the website' 
+          : 'Resume is now hidden from the website'
+      )
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to toggle visibility')
+    } finally {
+      setTogglingVisibility(false)
+    }
+  }
 
   async function fetchResumes() {
     try {
@@ -360,6 +409,47 @@ export function ResumeManager() {
           </div>
         </Card>
       </div>
+      {/* Resume Visibility Toggle */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold mb-2">Resume Visibility</h2>
+            <p className="text-sm text-muted-foreground">
+              {isResumeVisible 
+                ? 'Resume is currently visible on the website. Visitors can view and download it.'
+                : 'Resume is currently hidden. No one can access it on the website.'}
+            </p>
+          </div>
+          <Button
+            onClick={toggleVisibility}
+            disabled={togglingVisibility}
+            variant={isResumeVisible ? "destructive" : "default"}
+            className="shrink-0"
+          >
+            {togglingVisibility ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {isResumeVisible ? 'Hiding...' : 'Showing...'}
+              </>
+            ) : (
+              <>
+                {isResumeVisible ? (
+                  <>
+                    <EyeOff className="w-4 h-4 mr-2" />
+                    Hide Resume
+                  </>
+                ) : (
+                  <>
+                    <EyeIcon className="w-4 h-4 mr-2" />
+                    Show Resume
+                  </>
+                )}
+              </>
+            )}
+          </Button>
+        </div>
+      </Card>
+
       {/* Upload Section */}
       <Card className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Upload New Resume</h2>

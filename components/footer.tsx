@@ -1,11 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { Mail, Github, Linkedin, Settings } from "lucide-react"
-import { useResume } from "@/lib/use-resume"
+import { Mail, Github, Linkedin } from "lucide-react"
 
-export default function Footer() {
-  const { resumePath } = useResume()
+export default function Footer({ isResumeVisible }: { isResumeVisible: boolean }) {
+  const resumePath = '/Teddy_Malhan_Resume.pdf'
   return (
     <footer className="relative mx-auto w-full max-w-6xl px-6 py-10 md:py-14">
       {/* Ambient glow (match About section) */}
@@ -66,7 +65,9 @@ export default function Footer() {
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-medium text-foreground">More</p>
-            <a href={resumePath} target="_blank" rel="noreferrer noopener" className="text-muted-foreground hover:text-foreground">Resume</a>
+            {isResumeVisible && (
+              <a href={resumePath} target="_blank" rel="noreferrer noopener" className="text-muted-foreground hover:text-foreground">Resume</a>
+            )}
             <Link href="#about" className="text-muted-foreground hover:text-foreground">About</Link>
             <Link href="/admin/dashboard" className="text-muted-foreground hover:text-foreground flex items-center gap-2">
               Admin Dashboard

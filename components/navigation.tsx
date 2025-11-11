@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Menu, X, Search, Home, Hammer, Briefcase, Mail, FileText, Github, Linkedin } from "lucide-react"
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
-import { useResume } from "@/lib/use-resume"
 import {
   CommandDialog,
   CommandInput,
@@ -23,8 +22,8 @@ const navItems = [
   { name: "👤 about me", href: "#about", emoji: "" },
 ]
 
-export function Navigation() {
-  const { resumePath } = useResume()
+export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
+  const resumePath = '/Teddy_Malhan_Resume.pdf'
   const [activeSection, setActiveSection] = useState("")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 })
@@ -570,15 +569,17 @@ export function Navigation() {
           <CommandSeparator />
 
           <CommandGroup heading="Quick Actions">
-            <CommandItem onSelect={() => runCommand(() => {
-              const link = document.createElement('a')
-              link.href = resumePath
-              link.download = resumePath.split('/').pop() || 'resume.pdf'
-              link.click()
-            })}>
-              <FileText className="mr-2 h-4 w-4" />
-              <span>Download Resume</span>
-            </CommandItem>
+            {isResumeVisible && (
+              <CommandItem onSelect={() => runCommand(() => {
+                const link = document.createElement('a')
+                link.href = resumePath
+                link.download = resumePath.split('/').pop() || 'resume.pdf'
+                link.click()
+              })}>
+                <FileText className="mr-2 h-4 w-4" />
+                <span>Download Resume</span>
+              </CommandItem>
+            )}
             <CommandItem onSelect={() => runCommand(() => {
               window.open("https://github.com/teddymalhan", "_blank")
             })}>

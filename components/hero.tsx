@@ -4,10 +4,9 @@ import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
-import { useResume } from "@/lib/use-resume"
 
-export function Hero() {
-  const { resumePath } = useResume()
+export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
+  const resumePath = '/Teddy_Malhan_Resume.pdf'
   return (
     <>
       <style jsx>{`
@@ -139,14 +138,16 @@ export function Hero() {
 
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-          <InteractiveHoverButton 
-            onClick={() => window.open(resumePath, "_blank")}
-            className="bg-teal-600 hover:bg-amber-500 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 [&>div>div]:bg-amber-400 [&>div:last-child]:bg-amber-500"
-          >
-            view resume!
-          </InteractiveHoverButton>
-        </div>
+        {isResumeVisible && (
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+            <InteractiveHoverButton 
+              onClick={() => window.open(resumePath, "_blank")}
+              className="bg-teal-600 hover:bg-amber-500 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 [&>div>div]:bg-amber-400 [&>div:last-child]:bg-amber-500"
+            >
+              view resume!
+            </InteractiveHoverButton>
+          </div>
+        )}
 
         <div className="flex items-center justify-center space-x-4">
           <button
