@@ -23,6 +23,7 @@ export async function GET() {
         isActive: row.is_active,
         uploadedAt: row.uploaded_at,
         fileSize: row.file_size,
+        notes: row.notes || null,
       }))
     )
   } catch (error) {

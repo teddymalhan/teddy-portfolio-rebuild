@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2, Eye } from 'lucide-react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog'
 import { toast } from 'sonner'
 
@@ -20,6 +21,7 @@ interface ResumeVersion {
   isActive: boolean
   uploadedAt: string
   fileSize?: number
+  notes?: string | null
 }
 
 export function ResumeManager() {
@@ -27,6 +29,8 @@ export function ResumeManager() {
   const [uploading, setUploading] = useState(false)
   const [loading, setLoading] = useState(true)
   const [previewResume, setPreviewResume] = useState<ResumeVersion | null>(null)
+  const [editingNotes, setEditingNotes] = useState<ResumeVersion | null>(null)
+  const [notesText, setNotesText] = useState('')
 
   useEffect(() => {
     fetchResumes()
@@ -141,6 +145,36 @@ export function ResumeManager() {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }
 
+  function openEditNotes(resume: ResumeVersion) {
+    setEditingNotes(resume)
+    setNotesText(resume.notes || '')
+  }
+
+  async function saveNotes() {
+    if (!editingNotes) return
+
+    try {
+      const res = await fetch(`/api/resume/${editingNotes.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes: notesText.trim() || null }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update notes')
+      }
+
+      toast.success('Notes updated')
+      setEditingNotes(null)
+      setNotesText('')
+      fetchResumes()
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update notes')
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Upload Section */}
@@ -210,6 +244,11 @@ export function ResumeManager() {
                       <span>•</span>
                       <span>{formatFileSize(resume.fileSize)}</span>
                     </div>
+                    {resume.notes && (
+                      <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
+                        {resume.notes}
+                      </p>
+                    )}
                   </div>
                   {resume.isActive && (
                     <span className="px-2 py-1 text-xs font-medium bg-green-500/20 text-green-600 dark:text-green-400 rounded-full shrink-0">
@@ -218,6 +257,14 @@ export function ResumeManager() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openEditNotes(resume)}
+                    title="Edit notes"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -276,6 +323,38 @@ export function ResumeManager() {
               />
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Notes Dialog */}
+      <Dialog open={!!editingNotes} onOpenChange={(open) => !open && setEditingNotes(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Notes - {editingNotes?.filename}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <textarea
+              value={notesText}
+              onChange={(e) => setNotesText(e.target.value)}
+              placeholder="Add notes about this resume version (e.g., 'Updated for tech roles', 'Added new project')..."
+              className="w-full min-h-[120px] px-3 py-2 text-sm rounded-md border border-input bg-background resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              rows={5}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditingNotes(null)
+                setNotesText('')
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={saveNotes}>
+              Save Notes
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

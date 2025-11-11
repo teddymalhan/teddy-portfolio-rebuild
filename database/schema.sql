@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS resumes (
   uploaded_by TEXT,
   uploaded_at TIMESTAMP DEFAULT NOW(),
   file_size INTEGER,
-  mime_type TEXT DEFAULT 'application/pdf'
+  mime_type TEXT DEFAULT 'application/pdf',
+  notes TEXT
 );
 
 -- Create index for active resume lookups

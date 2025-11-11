@@ -3,6 +3,53 @@ import { del } from '@vercel/blob'
 import { sql } from '@/lib/db'
 import { isAuthorizedAdmin } from '@/lib/auth'
 
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const isAdmin = await isAuthorizedAdmin()
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+  }
+
+  try {
+    const { id } = await params
+    const resumeId = Number.parseInt(id, 10)
+
+    if (Number.isNaN(resumeId)) {
+      return NextResponse.json({ error: 'Invalid resume ID' }, { status: 400 })
+    }
+
+    const { notes } = await request.json()
+
+    const result = await sql`
+      UPDATE resumes 
+      SET notes = ${notes || null}
+      WHERE id = ${resumeId}
+      RETURNING *
+    ` as any[]
+
+    if (result.length === 0) {
+      return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({
+      success: true,
+      resume: {
+        id: result[0].id,
+        filename: result[0].filename,
+        notes: result[0].notes,
+      },
+    })
+  } catch (error) {
+    console.error('Error updating resume notes:', error)
+    return NextResponse.json(
+      { error: 'Failed to update resume notes' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
