@@ -17,8 +17,6 @@ export async function GET() {
       LIMIT 1
     ` as any[]
 
-    console.log('GET /api/resume - Active resume query result:', JSON.stringify(result, null, 2))
-
     if (result.length === 0) {
       return NextResponse.json({
         id: null,
@@ -36,7 +34,6 @@ export async function GET() {
       filename: resume.filename,
       path: resume.blob_url,
       blob_url: resume.blob_url,
-      blob_key: resume.blob_key,
       isActive: resume.is_active,
       uploadedAt: resume.uploaded_at,
       fileSize: resume.file_size,
@@ -48,7 +45,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error('Error fetching resume:', error)
+    console.error('Error fetching resume')
     return NextResponse.json({
       error: 'Failed to fetch resume',
     }, { status: 500 })
@@ -73,6 +70,23 @@ export async function POST(request: NextRequest) {
     if (file.type !== 'application/pdf') {
       return NextResponse.json(
         { error: 'Only PDF files are allowed' },
+        { status: 400 }
+      )
+    }
+
+    // Validate file size (10MB limit)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: 'File size must be less than 10MB' },
+        { status: 400 }
+      )
+    }
+
+    // Validate filename length
+    if (file.name.length > 255) {
+      return NextResponse.json(
+        { error: 'Filename must be less than 255 characters' },
         { status: 400 }
       )
     }
@@ -107,7 +121,7 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Error uploading resume:', error)
+    console.error('Error uploading resume')
     return NextResponse.json(
       { error: 'Failed to upload resume' },
       { status: 500 }

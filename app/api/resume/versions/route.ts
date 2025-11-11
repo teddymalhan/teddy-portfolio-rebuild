@@ -27,7 +27,7 @@ export async function GET() {
       }))
     )
   } catch (error) {
-    console.error('Error fetching resumes:', error)
+    console.error('Error fetching resumes')
     return NextResponse.json({ error: 'Failed to fetch resumes' }, { status: 500 })
   }
 }

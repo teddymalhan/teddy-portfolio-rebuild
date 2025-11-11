@@ -26,7 +26,7 @@ async function ensureSettingsTable() {
     `
   } catch (error: any) {
     // Table might already exist, that's fine
-    console.log('Settings table check:', error?.message || 'OK')
+    // Silently handle - no need to log
   }
 }
 
@@ -56,11 +56,8 @@ export async function GET() {
       LIMIT 1
     ` as any[]
 
-    console.log('Active resume query result:', JSON.stringify(result, null, 2))
-
     // If active resume exists, fetch it and serve with correct filename
     if (result.length > 0 && result[0].blob_url) {
-      console.log('Fetching active resume from:', result[0].blob_url)
       try {
         const blobResponse = await fetch(result[0].blob_url)
         if (blobResponse.ok) {
@@ -75,19 +72,15 @@ export async function GET() {
             },
           })
         } else {
-          console.error('Failed to fetch blob from URL:', blobResponse.status, blobResponse.statusText)
           return new NextResponse('Error fetching resume file from storage', { status: 500 })
         }
       } catch (fetchError) {
-        console.error('Error fetching blob:', fetchError)
         return new NextResponse('Error fetching resume file', { status: 500 })
       }
     }
 
-    console.log('No active resume found in database')
     return new NextResponse('No active resume found', { status: 404 })
   } catch (error) {
-    console.error('Error fetching active resume:', error)
     return new NextResponse('Error fetching resume', { status: 500 })
   }
 }

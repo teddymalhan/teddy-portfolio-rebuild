@@ -25,11 +25,10 @@ export async function GET() {
       reason: authorized ? 'Authorized' : 'Email not in AUTHORIZED_ADMINS'
     })
   } catch (error) {
-    console.error('Error checking admin:', error)
+    console.error('Error checking admin')
     return NextResponse.json({ 
       authorized: false,
-      reason: 'Error checking authorization',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      reason: 'Error checking authorization'
     }, { status: 500 })
   }
 }

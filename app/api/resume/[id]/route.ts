@@ -22,17 +22,43 @@ export async function PUT(
 
     const { notes, filename } = await request.json()
 
-    // Build update query dynamically based on what's provided
-    let result: any[]
-
-    if (notes !== undefined && filename !== undefined) {
-      // Update both notes and filename
+    // Validate filename length if provided
+    if (filename !== undefined) {
       if (!filename || filename.trim().length === 0) {
         return NextResponse.json(
           { error: 'Filename cannot be empty' },
           { status: 400 }
         )
       }
+      if (filename.length > 255) {
+        return NextResponse.json(
+          { error: 'Filename must be less than 255 characters' },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Validate notes length if provided
+    if (notes !== undefined && notes !== null) {
+      if (typeof notes !== 'string') {
+        return NextResponse.json(
+          { error: 'Notes must be a string' },
+          { status: 400 }
+        )
+      }
+      if (notes.length > 5000) {
+        return NextResponse.json(
+          { error: 'Notes must be less than 5000 characters' },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Build update query dynamically based on what's provided
+    let result: any[]
+
+    if (notes !== undefined && filename !== undefined) {
+      // Update both notes and filename
       result = await sql`
         UPDATE resumes 
         SET notes = ${notes || null}, filename = ${filename.trim()}
@@ -49,12 +75,6 @@ export async function PUT(
       ` as any[]
     } else if (filename !== undefined) {
       // Update only filename
-      if (!filename || filename.trim().length === 0) {
-        return NextResponse.json(
-          { error: 'Filename cannot be empty' },
-          { status: 400 }
-        )
-      }
       result = await sql`
         UPDATE resumes 
         SET filename = ${filename.trim()}
@@ -81,7 +101,7 @@ export async function PUT(
       },
     })
   } catch (error) {
-    console.error('Error updating resume:', error)
+    console.error('Error updating resume')
     return NextResponse.json(
       { error: 'Failed to update resume' },
       { status: 500 }
@@ -129,7 +149,6 @@ export async function DELETE(
     try {
       await del(resume.blob_key)
     } catch (blobError) {
-      console.error('Error deleting blob:', blobError)
       // Continue with database deletion even if blob deletion fails
     }
 
@@ -138,7 +157,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting resume:', error)
+    console.error('Error deleting resume')
     return NextResponse.json(
       { error: 'Failed to delete resume' },
       { status: 500 }

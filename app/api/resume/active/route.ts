@@ -35,7 +35,7 @@ export async function PUT(request: NextRequest) {
       resume: result[0],
     })
   } catch (error) {
-    console.error('Error setting active resume:', error)
+    console.error('Error setting active resume')
     return NextResponse.json(
       { error: 'Failed to set active resume' },
       { status: 500 }
