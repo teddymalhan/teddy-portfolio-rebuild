@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown, Pencil, EyeOff, Eye as EyeIcon } from 'lucide-react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown, Pencil, EyeOff, Eye as EyeIcon, ExternalLink, Link2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -38,6 +38,8 @@ export function ResumeManager() {
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'size-desc' | 'size-asc'>('date-desc')
   const [isResumeVisible, setIsResumeVisible] = useState(true)
   const [togglingVisibility, setTogglingVisibility] = useState(false)
+  const [autoSetActive, setAutoSetActive] = useState(false)
+  const [selectedResumes, setSelectedResumes] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     fetchResumes()
@@ -136,6 +138,12 @@ export function ResumeManager() {
 
       toast.success('Resume uploaded successfully')
       fetchResumes()
+      
+      // Auto-set as active if option is enabled
+      if (autoSetActive && data.resume?.id) {
+        await setActive(data.resume.id)
+      }
+      
       // Reset file input
       event.target.value = ''
     } catch (error: any) {
@@ -189,6 +197,83 @@ export function ResumeManager() {
       fetchResumes()
     } catch (error: any) {
       toast.error(error.message || 'Failed to delete resume')
+    }
+  }
+
+  async function copyResumeLink(resume: ResumeVersion) {
+    const resumeUrl = `${window.location.origin}/Teddy_Malhan_Resume.pdf`
+    try {
+      await navigator.clipboard.writeText(resumeUrl)
+      toast.success('Resume link copied to clipboard!')
+    } catch (error) {
+      // Fallback for browsers that don't support clipboard API
+      const textArea = document.createElement('textarea')
+      textArea.value = resumeUrl
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      toast.success('Resume link copied to clipboard!')
+    }
+  }
+
+  function toggleResumeSelection(resumeId: number) {
+    const newSelected = new Set(selectedResumes)
+    if (newSelected.has(resumeId)) {
+      newSelected.delete(resumeId)
+    } else {
+      newSelected.add(resumeId)
+    }
+    setSelectedResumes(newSelected)
+  }
+
+  async function bulkDelete() {
+    if (selectedResumes.size === 0) {
+      toast.error('No resumes selected')
+      return
+    }
+
+    // Check if any selected resumes are active
+    const selectedActiveResumes = resumes.filter(r => 
+      selectedResumes.has(r.id) && r.isActive
+    )
+    
+    if (selectedActiveResumes.length > 0) {
+      toast.error('Cannot delete active resume(s). Set another resume as active first.')
+      return
+    }
+
+    const count = selectedResumes.size
+    if (!confirm(`Are you sure you want to delete ${count} resume${count > 1 ? 's' : ''}? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const deletePromises = Array.from(selectedResumes).map(id => 
+        fetch(`/api/resume/${id}`, { method: 'DELETE' })
+      )
+      
+      const results = await Promise.allSettled(deletePromises)
+      const failed = results.filter(r => r.status === 'rejected').length
+      
+      if (failed === 0) {
+        toast.success(`Successfully deleted ${count} resume${count > 1 ? 's' : ''}`)
+      } else {
+        toast.warning(`Deleted ${count - failed} of ${count} resumes`)
+      }
+      
+      setSelectedResumes(new Set())
+      fetchResumes()
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete resumes')
+    }
+  }
+
+  function toggleSelectAll() {
+    if (selectedResumes.size === filteredAndSortedResumes.length) {
+      setSelectedResumes(new Set())
+    } else {
+      setSelectedResumes(new Set(filteredAndSortedResumes.map(r => r.id)))
     }
   }
 
@@ -456,36 +541,62 @@ export function ResumeManager() {
         <p className="text-sm text-muted-foreground mb-4">
           Upload a new PDF resume. Maximum file size: 10MB
         </p>
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={handleUpload}
-            disabled={uploading}
-            className="hidden"
-          />
-          <Button disabled={uploading} asChild>
-            <span>
-              {uploading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Choose PDF File
-                </>
-              )}
+        <div className="flex flex-col gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={handleUpload}
+              disabled={uploading}
+              className="hidden"
+            />
+            <Button disabled={uploading} asChild>
+              <span>
+                {uploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 mr-2" />
+                    Choose PDF File
+                  </>
+                )}
+              </span>
+            </Button>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={autoSetActive}
+              onChange={(e) => setAutoSetActive(e.target.checked)}
+              className="w-4 h-4 rounded border-input"
+            />
+            <span className="text-sm text-muted-foreground">
+              Automatically set as active resume after upload
             </span>
-          </Button>
-        </label>
+          </label>
+        </div>
       </Card>
 
       {/* Resume List */}
       <Card className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <h2 className="text-2xl font-semibold">Resume Versions</h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-2xl font-semibold">Resume Versions</h2>
+            {selectedResumes.size > 0 && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={bulkDelete}
+                className="gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                Delete Selected ({selectedResumes.size})
+              </Button>
+            )}
+          </div>
           
           {/* Search, Filter, and Sort Controls */}
           <div className="flex flex-col sm:flex-row gap-3">
@@ -548,12 +659,33 @@ export function ResumeManager() {
           </p>
         ) : (
           <div className="space-y-3">
+            {/* Select All Header */}
+            {filteredAndSortedResumes.length > 0 && (
+              <div className="flex items-center gap-2 pb-2 border-b">
+                <input
+                  type="checkbox"
+                  checked={selectedResumes.size === filteredAndSortedResumes.length && filteredAndSortedResumes.length > 0}
+                  onChange={toggleSelectAll}
+                  className="w-4 h-4 rounded border-input cursor-pointer"
+                />
+                <span className="text-sm text-muted-foreground">
+                  Select all ({filteredAndSortedResumes.length})
+                </span>
+              </div>
+            )}
             {filteredAndSortedResumes.map((resume) => (
               <div
                 key={resume.id}
                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <input
+                    type="checkbox"
+                    checked={selectedResumes.has(resume.id)}
+                    onChange={() => toggleResumeSelection(resume.id)}
+                    className="w-4 h-4 rounded border-input cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  />
                   <FileText className="w-5 h-5 text-muted-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -592,6 +724,26 @@ export function ResumeManager() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-4">
+                  {resume.isActive && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyResumeLink(resume)}
+                        title="Copy resume link"
+                      >
+                        <Link2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open('/', '_blank')}
+                        title="View on website"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                    </>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"
