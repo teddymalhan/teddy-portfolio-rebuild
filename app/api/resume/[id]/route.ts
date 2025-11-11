@@ -20,14 +20,53 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid resume ID' }, { status: 400 })
     }
 
-    const { notes } = await request.json()
+    const { notes, filename } = await request.json()
 
-    const result = await sql`
-      UPDATE resumes 
-      SET notes = ${notes || null}
-      WHERE id = ${resumeId}
-      RETURNING *
-    ` as any[]
+    // Build update query dynamically based on what's provided
+    let result: any[]
+
+    if (notes !== undefined && filename !== undefined) {
+      // Update both notes and filename
+      if (!filename || filename.trim().length === 0) {
+        return NextResponse.json(
+          { error: 'Filename cannot be empty' },
+          { status: 400 }
+        )
+      }
+      result = await sql`
+        UPDATE resumes 
+        SET notes = ${notes || null}, filename = ${filename.trim()}
+        WHERE id = ${resumeId}
+        RETURNING *
+      ` as any[]
+    } else if (notes !== undefined) {
+      // Update only notes
+      result = await sql`
+        UPDATE resumes 
+        SET notes = ${notes || null}
+        WHERE id = ${resumeId}
+        RETURNING *
+      ` as any[]
+    } else if (filename !== undefined) {
+      // Update only filename
+      if (!filename || filename.trim().length === 0) {
+        return NextResponse.json(
+          { error: 'Filename cannot be empty' },
+          { status: 400 }
+        )
+      }
+      result = await sql`
+        UPDATE resumes 
+        SET filename = ${filename.trim()}
+        WHERE id = ${resumeId}
+        RETURNING *
+      ` as any[]
+    } else {
+      return NextResponse.json(
+        { error: 'No fields to update' },
+        { status: 400 }
+      )
+    }
 
     if (result.length === 0) {
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
@@ -42,9 +81,9 @@ export async function PUT(
       },
     })
   } catch (error) {
-    console.error('Error updating resume notes:', error)
+    console.error('Error updating resume:', error)
     return NextResponse.json(
-      { error: 'Failed to update resume notes' },
+      { error: 'Failed to update resume' },
       { status: 500 }
     )
   }

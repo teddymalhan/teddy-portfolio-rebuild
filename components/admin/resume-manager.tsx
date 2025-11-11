@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, X, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown } from 'lucide-react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, FileStack, HardDrive, Clock, CheckCircle2, Search, Filter, ArrowUpDown, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -31,6 +31,8 @@ export function ResumeManager() {
   const [previewResume, setPreviewResume] = useState<ResumeVersion | null>(null)
   const [editingNotes, setEditingNotes] = useState<ResumeVersion | null>(null)
   const [notesText, setNotesText] = useState('')
+  const [renamingResume, setRenamingResume] = useState<ResumeVersion | null>(null)
+  const [newFilename, setNewFilename] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'name-asc' | 'name-desc' | 'size-desc' | 'size-asc'>('date-desc')
@@ -175,6 +177,48 @@ export function ResumeManager() {
       fetchResumes()
     } catch (error: any) {
       toast.error(error.message || 'Failed to update notes')
+    }
+  }
+
+  function openRename(resume: ResumeVersion) {
+    setRenamingResume(resume)
+    setNewFilename(resume.filename)
+  }
+
+  async function saveRename() {
+    if (!renamingResume) return
+
+    const trimmedFilename = newFilename.trim()
+    if (!trimmedFilename) {
+      toast.error('Filename cannot be empty')
+      return
+    }
+
+    if (trimmedFilename === renamingResume.filename) {
+      setRenamingResume(null)
+      setNewFilename('')
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/resume/${renamingResume.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: trimmedFilename }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to rename resume')
+      }
+
+      toast.success('Resume renamed')
+      setRenamingResume(null)
+      setNewFilename('')
+      fetchResumes()
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to rename resume')
     }
   }
 
@@ -422,7 +466,16 @@ export function ResumeManager() {
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <FileText className="w-5 h-5 text-muted-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{resume.filename}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium truncate">{resume.filename}</p>
+                      <button
+                        onClick={() => openRename(resume)}
+                        className="shrink-0 p-1 hover:bg-accent rounded transition-colors"
+                        title="Rename resume"
+                      >
+                        <Pencil className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                      </button>
+                    </div>
                     <div className="flex items-center gap-3 text-sm text-muted-foreground">
                       <span>
                         {new Date(resume.uploadedAt).toLocaleDateString('en-US', {
@@ -545,6 +598,54 @@ export function ResumeManager() {
             </Button>
             <Button onClick={saveNotes}>
               Save Notes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rename Dialog */}
+      <Dialog open={!!renamingResume} onOpenChange={(open) => !open && setRenamingResume(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Rename Resume</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <label htmlFor="rename-input" className="text-sm font-medium mb-2 block">Filename</label>
+            <input
+              id="rename-input"
+              type="text"
+              value={newFilename}
+              onChange={(e) => setNewFilename(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  saveRename()
+                }
+                if (e.key === 'Escape') {
+                  setRenamingResume(null)
+                  setNewFilename('')
+                }
+              }}
+              placeholder="Enter new filename..."
+              className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              autoFocus
+            />
+            <p className="text-xs text-muted-foreground mt-2">
+              This will only change the display name, not the actual file.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRenamingResume(null)
+                setNewFilename('')
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={saveRename}>
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>
