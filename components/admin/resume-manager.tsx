@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, X } from 'lucide-react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye, Edit2, X, FileStack, HardDrive, Clock, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -175,8 +175,100 @@ export function ResumeManager() {
     }
   }
 
+  // Calculate statistics
+  const totalResumes = resumes.length
+  const activeResume = resumes.find((r) => r.isActive)
+  const totalStorage = resumes.reduce((sum, r) => sum + (r.fileSize || 0), 0)
+  const lastUpload = resumes.length > 0 
+    ? resumes.reduce((latest, r) => {
+        const rDate = new Date(r.uploadedAt)
+        const latestDate = new Date(latest.uploadedAt)
+        return rDate > latestDate ? r : latest
+      })
+    : null
+
   return (
     <div className="space-y-6">
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Total Resumes</p>
+              <p className="text-3xl font-bold mt-2">{totalResumes}</p>
+            </div>
+            <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center">
+              <FileStack className="h-6 w-6 text-blue-500" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">Active Resume</p>
+              {activeResume ? (
+                <>
+                  <p className="text-sm font-semibold mt-2 truncate">{activeResume.filename}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {new Date(activeResume.uploadedAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </p>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground mt-2">None</p>
+              )}
+            </div>
+            <div className="h-12 w-12 rounded-full bg-green-500/10 flex items-center justify-center shrink-0 ml-2">
+              <CheckCircle2 className="h-6 w-6 text-green-500" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Total Storage</p>
+              <p className="text-3xl font-bold mt-2">{formatFileSize(totalStorage)}</p>
+            </div>
+            <div className="h-12 w-12 rounded-full bg-purple-500/10 flex items-center justify-center">
+              <HardDrive className="h-6 w-6 text-purple-500" />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-muted-foreground">Last Upload</p>
+              {lastUpload ? (
+                <>
+                  <p className="text-sm font-semibold mt-2">
+                    {new Date(lastUpload.uploadedAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {new Date(lastUpload.uploadedAt).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground mt-2">Never</p>
+              )}
+            </div>
+            <div className="h-12 w-12 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0 ml-2">
+              <Clock className="h-6 w-6 text-orange-500" />
+            </div>
+          </div>
+        </Card>
+      </div>
       {/* Upload Section */}
       <Card className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Upload New Resume</h2>
