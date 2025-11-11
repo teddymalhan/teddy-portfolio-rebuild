@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Suspense } from "react"
+import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
@@ -31,20 +32,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div>
-            <Suspense fallback={null}>
-              {children}
-            </Suspense>
-            <Analytics />
-            <SpeedInsights />
-          </div>
-        </ThemeProvider>
+        <ClerkProviderWrapper>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div>
+              <Suspense fallback={null}>
+                {children}
+              </Suspense>
+              <Analytics />
+              <SpeedInsights />
+            </div>
+          </ThemeProvider>
+        </ClerkProviderWrapper>
       </body>
     </html>
   )

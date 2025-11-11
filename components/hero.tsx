@@ -4,8 +4,10 @@ import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
+import { useResume } from "@/lib/use-resume"
 
 export function Hero() {
+  const { resumePath } = useResume()
   return (
     <>
       <style jsx>{`
@@ -139,7 +141,7 @@ export function Hero() {
 
         <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
           <InteractiveHoverButton 
-            onClick={() => window.open("/Teddy_Malhan_Resume.pdf", "_blank")}
+            onClick={() => window.open(resumePath, "_blank")}
             className="bg-teal-600 hover:bg-amber-500 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 [&>div>div]:bg-amber-400 [&>div:last-child]:bg-amber-500"
           >
             view resume!

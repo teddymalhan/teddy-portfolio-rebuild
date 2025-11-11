@@ -1,0 +1,252 @@
+"use client"
+
+import { useState, useEffect } from 'react'
+import { Upload, Trash2, Check, FileText, Download, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { toast } from 'sonner'
+
+interface ResumeVersion {
+  id: number
+  filename: string
+  path: string
+  blob_url: string
+  isActive: boolean
+  uploadedAt: string
+  fileSize?: number
+}
+
+export function ResumeManager() {
+  const [resumes, setResumes] = useState<ResumeVersion[]>([])
+  const [uploading, setUploading] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchResumes()
+  }, [])
+
+  async function fetchResumes() {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/resume/versions')
+      if (!res.ok) throw new Error('Failed to fetch')
+      const data = await res.json()
+      setResumes(data)
+    } catch (error) {
+      toast.error('Failed to load resumes')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (file.type !== 'application/pdf') {
+      toast.error('Please upload a PDF file')
+      return
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB')
+      return
+    }
+
+    setUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const res = await fetch('/api/resume', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Upload failed')
+      }
+
+      toast.success('Resume uploaded successfully')
+      fetchResumes()
+      // Reset file input
+      event.target.value = ''
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to upload resume')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  async function setActive(resumeId: number) {
+    try {
+      const res = await fetch('/api/resume/active', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resumeId }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to set active')
+      }
+
+      toast.success('Active resume updated')
+      fetchResumes()
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update active resume')
+    }
+  }
+
+  async function deleteResume(resumeId: number, filename: string) {
+    if (
+      !confirm(
+        `Are you sure you want to delete "${filename}"? This action cannot be undone.`
+      )
+    )
+      return
+
+    try {
+      const res = await fetch(`/api/resume/${resumeId}`, {
+        method: 'DELETE',
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Delete failed')
+      }
+
+      toast.success('Resume deleted')
+      fetchResumes()
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete resume')
+    }
+  }
+
+  function formatFileSize(bytes?: number) {
+    if (!bytes) return 'Unknown size'
+    if (bytes < 1024) return `${bytes} B`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Upload Section */}
+      <Card className="p-6">
+        <h2 className="text-2xl font-semibold mb-4">Upload New Resume</h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Upload a new PDF resume. Maximum file size: 10MB
+        </p>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleUpload}
+            disabled={uploading}
+            className="hidden"
+          />
+          <Button disabled={uploading} asChild>
+            <span>
+              {uploading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4 mr-2" />
+                  Choose PDF File
+                </>
+              )}
+            </span>
+          </Button>
+        </label>
+      </Card>
+
+      {/* Resume List */}
+      <Card className="p-6">
+        <h2 className="text-2xl font-semibold mb-4">Resume Versions</h2>
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : resumes.length === 0 ? (
+          <p className="text-muted-foreground py-8 text-center">
+            No resumes uploaded yet. Upload your first resume above.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {resumes.map((resume) => (
+              <div
+                key={resume.id}
+                className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+              >
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <FileText className="w-5 h-5 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate">{resume.filename}</p>
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <span>
+                        {new Date(resume.uploadedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                      <span>•</span>
+                      <span>{formatFileSize(resume.fileSize)}</span>
+                    </div>
+                  </div>
+                  {resume.isActive && (
+                    <span className="px-2 py-1 text-xs font-medium bg-green-500/20 text-green-600 dark:text-green-400 rounded-full shrink-0">
+                      Active
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-4">
+                  <a
+                    href={resume.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline" size="sm">
+                      <Download className="w-4 h-4" />
+                    </Button>
+                  </a>
+                  {!resume.isActive && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setActive(resume.id)}
+                    >
+                      <Check className="w-4 h-4 mr-1" />
+                      Set Active
+                    </Button>
+                  )}
+                  {!resume.isActive && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteResume(resume.id, resume.filename)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+
