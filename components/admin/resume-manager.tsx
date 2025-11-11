@@ -1,9 +1,15 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Upload, Trash2, Check, FileText, Download, Loader2 } from 'lucide-react'
+import { Upload, Trash2, Check, FileText, Download, Loader2, Eye } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { toast } from 'sonner'
 
 interface ResumeVersion {
@@ -20,6 +26,7 @@ export function ResumeManager() {
   const [resumes, setResumes] = useState<ResumeVersion[]>([])
   const [uploading, setUploading] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [previewResume, setPreviewResume] = useState<ResumeVersion | null>(null)
 
   useEffect(() => {
     fetchResumes()
@@ -211,12 +218,20 @@ export function ResumeManager() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPreviewResume(resume)}
+                    title="Preview resume"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
                   <a
                     href={resume.path}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" title="Download resume">
                       <Download className="w-4 h-4" />
                     </Button>
                   </a>
@@ -245,6 +260,24 @@ export function ResumeManager() {
           </div>
         )}
       </Card>
+
+      {/* Preview Dialog */}
+      <Dialog open={!!previewResume} onOpenChange={(open) => !open && setPreviewResume(null)}>
+        <DialogContent className="!max-w-none !w-screen !h-screen !top-0 !left-0 !translate-x-0 !translate-y-0 !m-0 !rounded-none !p-0 flex flex-col">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0">
+            <DialogTitle>{previewResume?.filename}</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-hidden p-6 min-h-0">
+            {previewResume && (
+              <iframe
+                src={previewResume.path}
+                className="w-full h-full border-0 rounded-lg"
+                title={`Preview of ${previewResume.filename}`}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
