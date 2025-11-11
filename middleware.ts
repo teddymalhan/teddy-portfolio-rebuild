@@ -11,7 +11,10 @@ export default clerkMiddleware(async (auth, req) => {
 
   // Intercept resume PDF requests to use dynamic resume
   if (req.nextUrl.pathname === '/Teddy_Malhan_Resume.pdf') {
-    return NextResponse.rewrite(new URL('/api/resume/file', req.url))
+    // Preserve query parameters (for cache-busting)
+    const rewriteUrl = new URL('/api/resume/file', req.url)
+    rewriteUrl.search = req.nextUrl.search // Preserve query params
+    return NextResponse.rewrite(rewriteUrl)
   }
 })
 

@@ -3,6 +3,10 @@ import { put } from '@vercel/blob'
 import { sql } from '@/lib/db'
 import { isAuthorizedAdmin, getCurrentUserId } from '@/lib/auth'
 
+// Force dynamic rendering to prevent caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // GET - Get current active resume
 export async function GET() {
   try {
@@ -13,15 +17,16 @@ export async function GET() {
       LIMIT 1
     ` as any[]
 
+    console.log('GET /api/resume - Active resume query result:', JSON.stringify(result, null, 2))
+
     if (result.length === 0) {
-      // Fallback to default resume
       return NextResponse.json({
-        id: 'default',
-        filename: 'Teddy_Malhan_Resume.pdf',
-        path: '/Teddy_Malhan_Resume.pdf',
+        id: null,
+        filename: null,
+        path: null,
         blob_url: null,
-        isActive: true,
-        uploadedAt: new Date().toISOString(),
+        isActive: false,
+        uploadedAt: null,
       })
     }
 
@@ -35,16 +40,18 @@ export async function GET() {
       isActive: resume.is_active,
       uploadedAt: resume.uploaded_at,
       fileSize: resume.file_size,
+    }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
     })
   } catch (error) {
     console.error('Error fetching resume:', error)
-    // Fallback to default
     return NextResponse.json({
-      id: 'default',
-      filename: 'Teddy_Malhan_Resume.pdf',
-      path: '/Teddy_Malhan_Resume.pdf',
-      isActive: true,
-    })
+      error: 'Failed to fetch resume',
+    }, { status: 500 })
   }
 }
 

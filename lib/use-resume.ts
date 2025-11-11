@@ -17,26 +17,40 @@ export function useResume() {
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
-    async function fetchVisibility() {
+    async function fetchResumeInfo() {
       try {
-        const res = await fetch('/api/resume/visibility')
-        if (res.ok) {
-          const data = await res.json()
-          setIsVisible(data.isVisible)
+        // Fetch both visibility and active resume info in parallel
+        const [visibilityRes, resumeRes] = await Promise.all([
+          fetch('/api/resume/visibility'),
+          fetch('/api/resume')
+        ])
+
+        // Handle visibility
+        if (visibilityRes.ok) {
+          const visibilityData = await visibilityRes.json()
+          setIsVisible(visibilityData.isVisible)
+        }
+
+        // Handle resume path with cache-busting
+        if (resumeRes.ok) {
+          const resumeData = await resumeRes.json()
+          // Use resume ID as cache-buster - changes when active resume changes
+          setResumePath(`/Teddy_Malhan_Resume.pdf?v=${resumeData.id}`)
+        } else {
+          // Fallback to timestamp-based cache-busting if API fails
+          setResumePath(`/Teddy_Malhan_Resume.pdf?t=${Date.now()}`)
         }
       } catch (error) {
-        console.error('Failed to fetch resume visibility:', error)
-        // Default to visible on error
+        console.error('Failed to fetch resume info:', error)
+        // Default to visible on error with timestamp cache-busting
         setIsVisible(true)
+        setResumePath(`/Teddy_Malhan_Resume.pdf?t=${Date.now()}`)
       } finally {
         setLoading(false)
       }
     }
 
-    // Always use the local endpoint so middleware can handle it
-    // The route handler will serve the active resume from the database
-    setResumePath('/Teddy_Malhan_Resume.pdf')
-    fetchVisibility()
+    fetchResumeInfo()
   }, [])
 
   return { resumePath, loading, isVisible }

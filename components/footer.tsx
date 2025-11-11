@@ -1,10 +1,38 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Mail, Github, Linkedin } from "lucide-react"
 
 export default function Footer({ isResumeVisible }: { isResumeVisible: boolean }) {
-  const resumePath = '/Teddy_Malhan_Resume.pdf'
+  const [resumePath, setResumePath] = useState('/Teddy_Malhan_Resume.pdf')
+
+  useEffect(() => {
+    async function fetchResumePath() {
+      try {
+        const res = await fetch('/api/resume', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        if (res.ok) {
+          const data = await res.json()
+          // Use resume ID + timestamp as cache-buster - ensures fresh fetch every time
+          const timestamp = Date.now()
+          setResumePath(`/Teddy_Malhan_Resume.pdf?v=${data.id}&t=${timestamp}`)
+        }
+      } catch (error) {
+        console.error('Failed to fetch resume info:', error)
+        // Fallback to timestamp-based cache-busting
+        setResumePath(`/Teddy_Malhan_Resume.pdf?t=${Date.now()}`)
+      }
+    }
+
+    if (isResumeVisible) {
+      fetchResumePath()
+    }
+  }, [isResumeVisible])
   return (
     <footer className="relative mx-auto w-full max-w-6xl px-6 py-10 md:py-14">
       {/* Ambient glow (match About section) */}
@@ -66,7 +94,22 @@ export default function Footer({ isResumeVisible }: { isResumeVisible: boolean }
           <div className="flex flex-col gap-2">
             <p className="font-medium text-foreground">More</p>
             {isResumeVisible && (
-              <a href={resumePath} target="_blank" rel="noreferrer noopener" className="text-muted-foreground hover:text-foreground">Resume</a>
+              <a 
+                href={resumePath} 
+                target="_blank" 
+                rel="noreferrer noopener" 
+                onClick={(e) => {
+                  // Force fresh fetch by adding current timestamp
+                  e.preventDefault()
+                  const freshUrl = resumePath.includes('&t=') 
+                    ? `${resumePath.split('&t=')[0]}&t=${Date.now()}`
+                    : `${resumePath}?t=${Date.now()}`
+                  window.open(freshUrl, '_blank', 'noopener,noreferrer')
+                }}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Resume
+              </a>
             )}
             <Link href="#about" className="text-muted-foreground hover:text-foreground">About</Link>
             <Link href="/admin/dashboard" className="text-muted-foreground hover:text-foreground flex items-center gap-2">

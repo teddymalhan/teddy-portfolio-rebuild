@@ -17,13 +17,11 @@ export async function GET() {
 
     const authorized = await isAuthorizedAdmin()
     const userEmail = user.emailAddresses[0]?.emailAddress
-    const authorizedEmails = process.env.AUTHORIZED_ADMINS?.split(',') || []
 
     return NextResponse.json({ 
       authorized,
       userId,
       userEmail,
-      authorizedEmails,
       reason: authorized ? 'Authorized' : 'Email not in AUTHORIZED_ADMINS'
     })
   } catch (error) {

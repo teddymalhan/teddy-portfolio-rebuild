@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [loading, setLoading] = useState(true)
-
+  
   useEffect(() => {
     async function checkAuth() {
       if (!isLoaded) return

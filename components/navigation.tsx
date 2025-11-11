@@ -23,7 +23,7 @@ const navItems = [
 ]
 
 export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
-  const resumePath = '/Teddy_Malhan_Resume.pdf'
+  const [resumePath, setResumePath] = useState('/Teddy_Malhan_Resume.pdf')
   const [activeSection, setActiveSection] = useState("")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 })
@@ -156,6 +156,34 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
       document.body.style.overflow = ""
     }
   }, [isMobileMenuOpen])
+
+  // Fetch resume path with cache-busting
+  useEffect(() => {
+    async function fetchResumePath() {
+      try {
+        const res = await fetch('/api/resume', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        if (res.ok) {
+          const data = await res.json()
+          // Use resume ID + timestamp as cache-buster - ensures fresh fetch every time
+          const timestamp = Date.now()
+          setResumePath(`/Teddy_Malhan_Resume.pdf?v=${data.id}&t=${timestamp}`)
+        }
+      } catch (error) {
+        console.error('Failed to fetch resume info:', error)
+        // Fallback to timestamp-based cache-busting
+        setResumePath(`/Teddy_Malhan_Resume.pdf?t=${Date.now()}`)
+      }
+    }
+
+    if (isResumeVisible) {
+      fetchResumePath()
+    }
+  }, [isResumeVisible])
 
   // Cubic bezier easing function for smooth scrolling
   // Evaluates cubic-bezier(0.5, 1, 0.89, 1) at progress t (0 to 1)
@@ -571,10 +599,11 @@ export function Navigation({ isResumeVisible }: { isResumeVisible: boolean }) {
           <CommandGroup heading="Quick Actions">
             {isResumeVisible && (
               <CommandItem onSelect={() => runCommand(() => {
-                const link = document.createElement('a')
-                link.href = resumePath
-                link.download = resumePath.split('/').pop() || 'resume.pdf'
-                link.click()
+                // Force fresh fetch by adding current timestamp
+                const freshUrl = resumePath.includes('&t=') 
+                  ? `${resumePath.split('&t=')[0]}&t=${Date.now()}`
+                  : `${resumePath}?t=${Date.now()}`
+                window.open(freshUrl, '_blank', 'noopener,noreferrer')
               })}>
                 <FileText className="mr-2 h-4 w-4" />
                 <span>Download Resume</span>

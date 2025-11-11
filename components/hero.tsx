@@ -1,12 +1,40 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { TextHighlighter } from "@/components/fancy/text/text-highlighter"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 
 export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
-  const resumePath = '/Teddy_Malhan_Resume.pdf'
+  const [resumePath, setResumePath] = useState('/Teddy_Malhan_Resume.pdf')
+
+  useEffect(() => {
+    async function fetchResumePath() {
+      try {
+        const res = await fetch('/api/resume', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        if (res.ok) {
+          const data = await res.json()
+          // Use resume ID + timestamp as cache-buster - ensures fresh fetch every time
+          const timestamp = Date.now()
+          setResumePath(`/Teddy_Malhan_Resume.pdf?v=${data.id}&t=${timestamp}`)
+        }
+      } catch (error) {
+        console.error('Failed to fetch resume info:', error)
+        // Fallback to timestamp-based cache-busting
+        setResumePath(`/Teddy_Malhan_Resume.pdf?t=${Date.now()}`)
+      }
+    }
+
+    if (isResumeVisible) {
+      fetchResumePath()
+    }
+  }, [isResumeVisible])
   return (
     <>
       <style jsx>{`
@@ -141,7 +169,13 @@ export function Hero({ isResumeVisible }: { isResumeVisible: boolean }) {
         {isResumeVisible && (
           <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
             <InteractiveHoverButton 
-              onClick={() => window.open(resumePath, "_blank")}
+              onClick={() => {
+                // Force fresh fetch by adding current timestamp
+                const freshUrl = resumePath.includes('&t=') 
+                  ? `${resumePath.split('&t=')[0]}&t=${Date.now()}`
+                  : `${resumePath}?t=${Date.now()}`
+                window.open(freshUrl, "_blank", "noopener,noreferrer")
+              }}
               className="bg-teal-600 hover:bg-amber-500 text-white font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 [&>div>div]:bg-amber-400 [&>div:last-child]:bg-amber-500"
             >
               view resume!

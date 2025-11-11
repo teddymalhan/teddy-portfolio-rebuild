@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import { sql } from '@/lib/db'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+
+// Force dynamic rendering to prevent caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // Helper function to ensure settings table exists
 async function ensureSettingsTable() {
@@ -48,13 +50,13 @@ export async function GET() {
 
     // Fetch the active resume from database
     const result = await sql`
-      SELECT blob_url FROM resumes 
+      SELECT id, blob_url, filename, uploaded_at FROM resumes 
       WHERE is_active = TRUE 
       ORDER BY uploaded_at DESC 
       LIMIT 1
     ` as any[]
 
-    console.log('Active resume query result:', result)
+    console.log('Active resume query result:', JSON.stringify(result, null, 2))
 
     // If active resume exists, fetch it and serve with correct filename
     if (result.length > 0 && result[0].blob_url) {
@@ -67,49 +69,26 @@ export async function GET() {
             headers: {
               'Content-Type': 'application/pdf',
               'Content-Disposition': 'inline; filename="Teddy_Malhan_Resume.pdf"',
-              'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+              'Cache-Control': 'no-cache, no-store, must-revalidate', // Prevent caching
+              'Pragma': 'no-cache',
+              'Expires': '0',
             },
           })
+        } else {
+          console.error('Failed to fetch blob from URL:', blobResponse.status, blobResponse.statusText)
+          return new NextResponse('Error fetching resume file from storage', { status: 500 })
         }
       } catch (fetchError) {
         console.error('Error fetching blob:', fetchError)
-        // Fall through to static file
+        return new NextResponse('Error fetching resume file', { status: 500 })
       }
     }
 
-    console.log('No active resume found, serving static file')
-
-    // Fallback: serve the static file from /public if no active resume
-    try {
-      const filePath = join(process.cwd(), 'public', 'Teddy_Malhan_Resume.pdf')
-      const fileBuffer = await readFile(filePath)
-      
-      return new NextResponse(fileBuffer as any, {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': 'inline; filename="Teddy_Malhan_Resume.pdf"',
-        },
-      })
-    } catch (staticError) {
-      console.error('Error reading static file:', staticError)
-      return new NextResponse('Resume not found', { status: 404 })
-    }
+    console.log('No active resume found in database')
+    return new NextResponse('No active resume found', { status: 404 })
   } catch (error) {
     console.error('Error fetching active resume:', error)
-    // Try to serve static file on error
-    try {
-      const filePath = join(process.cwd(), 'public', 'Teddy_Malhan_Resume.pdf')
-      const fileBuffer = await readFile(filePath)
-      
-      return new NextResponse(fileBuffer as any, {
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': 'inline; filename="Teddy_Malhan_Resume.pdf"',
-        },
-      })
-    } catch (staticError) {
-      return new NextResponse('Resume not found', { status: 404 })
-    }
+    return new NextResponse('Error fetching resume', { status: 500 })
   }
 }
 
